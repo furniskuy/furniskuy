@@ -59,7 +59,7 @@ public class KoneksiSql {
         ResultSet rs = null;
 
         try {
-            con = getConnection();
+            con = getConnect();
 
             stmt = con.createStatement();
             rs = stmt.executeQuery(query);
@@ -102,21 +102,19 @@ public class KoneksiSql {
 
     }
     
-    public boolean update(String query) throws Exception {
+    public void update(String query) throws Exception {
         
         Statement stmt = null;
 
         try {
-            con = getConnection();
+            con = getConnect();
 
             stmt = con.createStatement();
             int status = stmt.executeUpdate(query);
             
-            if (status == 1) {
-                return true;
+            if (status == 0) {
+                throw new Exception("Query data gagal");
             }
-            
-            return false;
             
         } catch (Exception e) {
             throw e;

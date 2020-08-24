@@ -22,7 +22,7 @@ public class BarangView extends javax.swing.JFrame {
 
     KoneksiSql koneksiSql = new KoneksiSql();
     ArrayList<EntityInterfc> listBarang = new ArrayList();
-    
+
     BarangModel emptyBarangModel = new BarangModel();
     BarangModel selectedBarangModel = null;
 
@@ -39,7 +39,8 @@ public class BarangView extends javax.swing.JFrame {
                     if (tableBarang.getValueAt(tableBarang.getSelectedRow(), 0) != null) {
                         int indexSelected = Integer.parseInt(tableBarang.getValueAt(tableBarang.getSelectedRow(), 0).toString()
                         );
-                    setFieldValueAsSelectedRow(indexSelected - 1);
+                        setFieldValueAsSelectedRow(indexSelected - 1);
+                        simpanButton.setEnabled(false);
 
                     }
                 }
@@ -74,68 +75,93 @@ public class BarangView extends javax.swing.JFrame {
     void clearField() {
         selectedBarangModel = null;
         kodeBarangField.setText("");
+        kodeBarangField.setEnabled(true);
 
         namaBarangField.setText("");
         jumlahField.setText("");
         hargaField.setText("");
+
+        simpanButton.setEnabled(true);
     }
 
     boolean fieldIsEmpty() {
         return namaBarangField.getText().isEmpty() || jumlahField.getText().isEmpty() || hargaField.getText().isEmpty();
     }
-    
+
     String addSingleQuote(String str) {
         return "'" + str + "'";
     }
 
     void simpanData() {
-        if (fieldIsEmpty()) {
+        if (!fieldIsEmpty() && !(kodeBarangField.getText().isEmpty())) {
             String join = String.join(", ", emptyBarangModel.getNamaKolom());
-            String query = "INSERT INTO barang(" + join + ") VALUES(" + 
-                   addSingleQuote(namaBarangField.getText()) + ", " +
-                   addSingleQuote(kodeBarangField.getText()) + ", " +
-                   jumlahField.getText() + ", " +
-                   hargaField.getText() +
-                    ");";
+            String query = "INSERT INTO barang(" + join + ") VALUES("
+                    + addSingleQuote(kodeBarangField.getText()) + ", "
+                    + addSingleQuote(namaBarangField.getText()) + ", "
+                    + jumlahField.getText() + ", "
+                    + hargaField.getText()
+                    + ");";
 
             try {
                 koneksiSql.update(query);
-                JOptionPane.showConfirmDialog(this, "Berhasil menyimpan data dari database");
+                JOptionPane.showMessageDialog(this, "Berhasil menyimpan data ke database");
+                getListBarang();
             } catch (Exception e) {
-                JOptionPane.showConfirmDialog(this, "Gagal menyimpan data dari database \n" + e.getMessage());
+                System.out.println(e);
+                JOptionPane.showMessageDialog(this, "Gagal menyimpan data ke database \n" + e.getMessage());
             }
-
+        } else {
+            JOptionPane.showMessageDialog(this, "Data tidak boleh kosong");
         }
     }
-    
+
     void updateData() {
-        if (fieldIsEmpty()) {
-            String query = "UPDATE barang SET kode_barang = " + 
-                   addSingleQuote(namaBarangField.getText()) + ", nama_barang = " +
-                   addSingleQuote(kodeBarangField.getText()) + ", jumlah = " +
-                   jumlahField.getText() + ", harga = " +
-                   hargaField.getText() + ";" ;
+        if (selectedBarangModel != null) {
+            if (!fieldIsEmpty() && !(kodeBarangField.getText().isEmpty())) {
+                String query = "UPDATE barang SET nama_barang = "
+                        + addSingleQuote(namaBarangField.getText()) + ", jumlah = "
+                        + jumlahField.getText() + ", harga = "
+                        + hargaField.getText()
+                        + " WHERE kode_barang = " + addSingleQuote(kodeBarangField.getText());
 
-            try {
-                koneksiSql.update(query);
-                JOptionPane.showConfirmDialog(this, "Berhasil menyimpan data dari database");
-            } catch (Exception e) {
-                JOptionPane.showConfirmDialog(this, "Gagal menyimpan data dari database \n" + e.getMessage());
+                try {
+                    koneksiSql.update(query);
+                    JOptionPane.showMessageDialog(this, "Berhasil menngubah data dari database");
+                    kodeBarangField.setEnabled(true);
+                    getListBarang();
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(this, "Gagal mengubah data dari database \n" + e.getMessage());
+                }
+
+            } else {
+                JOptionPane.showMessageDialog(this, "Data tidak boleh kosong");
             }
-
+        } else {
+            JOptionPane.showMessageDialog(this, "Mohon pilih barang dalem tabel untuk melakukan penghapusan");
         }
     }
 
     void hapusData() {
         if (selectedBarangModel != null) {
 
-            String query = "DELETE FROM barang WHERE kode_barang = '" + selectedBarangModel.getKodeBarang() + "';";
-            try {
-                koneksiSql.update(query);
-                JOptionPane.showConfirmDialog(this, "Berhasil menghapus data dari database");
-            } catch (Exception e) {
-                JOptionPane.showConfirmDialog(this, "Gagal menghapus data dari database \n" + e.getMessage());
+            int confirm = JOptionPane.showConfirmDialog(this, "Anda yakin ingin menghapus barang  " + selectedBarangModel.getKodeBarang(), "Konfirmasi", JOptionPane.YES_NO_OPTION);
+
+            if (confirm == 0) {
+
+                String query = "DELETE FROM barang WHERE kode_barang = '" + selectedBarangModel.getKodeBarang() + "';";
+                try {
+                    koneksiSql.update(query);
+                    JOptionPane.showMessageDialog(this, "Berhasil menghapus data dari database");
+                    kodeBarangField.setEnabled(true);
+                    getListBarang();
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(this, "Gagal menghapus data dari database \n" + e.getMessage());
+                }
+
             }
+
+        } else {
+            JOptionPane.showMessageDialog(this, "Mohon pilih barang dalem tabel untuk melakukan penghapusan");
         }
 
     }
@@ -242,8 +268,6 @@ public class BarangView extends javax.swing.JFrame {
         );
 
         jLabel13.setText("Kode Barang");
-
-        kodeBarangField.setEnabled(false);
 
         jLabel14.setText("Nama Barang");
 
@@ -368,7 +392,7 @@ public class BarangView extends javax.swing.JFrame {
     }//GEN-LAST:event_ubahButtonMouseClicked
 
     private void hapusButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_hapusButtonMouseClicked
-       hapusData();
+        hapusData();
     }//GEN-LAST:event_hapusButtonMouseClicked
 
     private void clearFieldButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_clearFieldButtonMouseClicked
