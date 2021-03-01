@@ -9,12 +9,12 @@ package penjualan.interfc;
  *
  * @author fadil
  */
-public interface EntityInterfc {
+public interface EntityInterface {
     
     String[] getNamaKolom();
     String[] getHeader();
     Object[] toTableRow();
     Object[] toTableRowWithIndex(int index);
-    EntityInterfc newObject(String[] args);
+    EntityInterface newObject(String[] args);
     
 }

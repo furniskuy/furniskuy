@@ -6,13 +6,17 @@
 package penjualan.view;
 
 import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import penjualan.entity.BarangModel;
-import penjualan.interfc.EntityInterfc;
+import penjualan.entity.BarangEntity;
+import penjualan.interfc.BarangInterface;
 import penjualan.koneksi.KoneksiSql;
+import penjualan.interfc.EntityInterface;
 
 /**
  *
@@ -21,7 +25,7 @@ import penjualan.koneksi.KoneksiSql;
 public class BarangView extends javax.swing.JFrame {
 
     KoneksiSql koneksiSql = new KoneksiSql();
-    ArrayList<EntityInterfc> listBarang = new ArrayList();
+    ArrayList<EntityInterface> listBarang = new ArrayList();
 
     BarangModel emptyBarangModel = new BarangModel();
     BarangModel selectedBarangModel = null;
@@ -57,7 +61,7 @@ public class BarangView extends javax.swing.JFrame {
             }
             tableBarang.setModel(dtm);
         } catch (Exception e) {
-            JOptionPane.showConfirmDialog(this, "Gagal mendapat data dari database \n" + e.getMessage());
+            JOptionPane.showMessageDialog(this, "Gagal mendapat data dari database \n" + e.getMessage());
         }
     }
 
@@ -137,7 +141,7 @@ public class BarangView extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, "Data tidak boleh kosong");
             }
         } else {
-            JOptionPane.showMessageDialog(this, "Mohon pilih barang dalem tabel untuk melakukan penghapusan");
+            JOptionPane.showMessageDialog(this, "Mohon pilih barang dalam tabel untuk melakukan penghapusan");
         }
     }
 
@@ -161,7 +165,7 @@ public class BarangView extends javax.swing.JFrame {
             }
 
         } else {
-            JOptionPane.showMessageDialog(this, "Mohon pilih barang dalem tabel untuk melakukan penghapusan");
+            JOptionPane.showMessageDialog(this, "Mohon pilih barang dalam tabel untuk melakukan penghapusan");
         }
 
     }
@@ -258,13 +262,13 @@ public class BarangView extends javax.swing.JFrame {
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 684, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 716, Short.MAX_VALUE)
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 206, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 394, Short.MAX_VALUE))
         );
 
         jLabel13.setText("Kode Barang");
@@ -279,7 +283,7 @@ public class BarangView extends javax.swing.JFrame {
         jPanel10.setLayout(jPanel10Layout);
         jPanel10Layout.setHorizontalGroup(
             jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 288, Short.MAX_VALUE)
+            .addGap(0, 309, Short.MAX_VALUE)
             .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel10Layout.createSequentialGroup()
                     .addContainerGap()
@@ -298,7 +302,7 @@ public class BarangView extends javax.swing.JFrame {
         );
         jPanel10Layout.setVerticalGroup(
             jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 169, Short.MAX_VALUE)
+            .addGap(0, 180, Short.MAX_VALUE)
             .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel10Layout.createSequentialGroup()
                     .addContainerGap()

@@ -11,7 +11,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import penjualan.interfc.EntityInterfc;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import penjualan.interfc.EntityInterface;
 
 /**
  *
@@ -20,10 +22,25 @@ import penjualan.interfc.EntityInterfc;
 public class KoneksiSql {
 
     private static Connection con = null;
-    private String databaseArgs = "?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
-    private String jdbcString = "jdbc:mysql://localhost:3306/db_jual";
+    private String databaseArgs = 
+            "?useUnicode=true&useJDBCCompliantTimezoneShift=true" +
+            "&useLegacyDatetimeCode=false&serverTimezone=UTC";
+    private String jdbcString = "jdbc:mysql://localhost:3306/db_inventaris";
     private String databaseUser = "root";
     private String databasePassword = "";
+    
+    public static Connection getKoneksi() {
+        if (con == null) {
+            try {
+                Class.forName("com.mysql.cj.jdbc.Driver");
+                con = DriverManager.getConnection(
+                    "jdbc:mysql://localhost:3306/db_inventaris", "root", "");
+            } catch (Exception e) {
+                Logger.getLogger(KoneksiSql.class.getName()).log(Level.SEVERE, null, e);
+            }
+        }
+        return con;
+    }
 
     public Connection getConnect() throws Exception {
         if (con == null) {
@@ -44,14 +61,15 @@ public class KoneksiSql {
             return DriverManager.getConnection(
                     jdbcString + databaseArgs, databaseUser, databasePassword);
         } catch (Exception e) {
+            System.out.println(e);
             System.out.println("Koneksi pada database error: " + e.getMessage());
             throw new Exception("Tidak dapat koneksi ke database");
         }
     }
 
-    public ArrayList<EntityInterfc> select(String query, EntityInterfc entity) throws Exception {
+    public ArrayList<EntityInterface> select(String query, EntityInterface entity) throws Exception {
 
-        ArrayList<EntityInterfc> entities = new ArrayList();
+        ArrayList<EntityInterface> entities = new ArrayList();
         int colLenght = entity.getNamaKolom().length;
         String[] colName = entity.getNamaKolom();
 
@@ -69,7 +87,7 @@ public class KoneksiSql {
                 for (int i = 0; i < colLenght; i++) {
                     values[i] = rs.getString(colName[i]);
                 }
-                EntityInterfc newEntity = entity.newObject(values);
+                EntityInterface newEntity = entity.newObject(values);
                 entities.add(newEntity);
             }
             

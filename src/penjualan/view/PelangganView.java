@@ -5,17 +5,110 @@
  */
 package penjualan.view;
 
+import java.awt.Color;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableModel;
+import penjualan.entity.PelangganEntity;
+import penjualan.implement.PelangganImplement;
+import penjualan.interfc.PelangganInterface;
+
 /**
  *
  * @author fadil
  */
 public class PelangganView extends javax.swing.JFrame {
 
+    List<PelangganEntity> record = new ArrayList<PelangganEntity>();
+    PelangganInterface plgServis;
+    int row;
+    String jenisKelamin = "";
+
     /**
      * Creates new form PelangganView
      */
     public PelangganView() {
         initComponents();
+
+        this.getContentPane().setBackground(Color.BLUE);
+
+        plgServis = new PelangganImplement();
+        tablePelanggan.getSelectionModel().addListSelectionListener(
+                new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                row = tablePelanggan.getSelectedRow();
+                if (row != -1) {
+                    isiText();
+                    simpanButton.setEnabled(false);
+                    txt_idPelanggan.setEnabled(false);
+                }
+            }
+        });
+        this.statusAwal();
+    }
+
+    void statusAwal() {
+        kosongkanText();
+        loadData();
+        isiTabel();
+    }
+
+    void kosongkanText() {
+        this.txt_idPelanggan.setText("");
+        this.txt_namaPelanggan.setText("");
+        this.txt_alamat.setText("");
+        this.txt_noTelepon.setText("");
+        rBtn_LK.setSelected(false);
+        rBtn_PR.setSelected(false);
+        jenisKelamin = "";
+    }
+
+    void loadData() {
+        try {
+            record = plgServis.getAll();
+        } catch (SQLException ex) {
+            Logger.getLogger(PelangganView.class.getName()).log(Level.SEVERE,
+                    null, ex);
+        }
+    }
+
+    void isiTabel() {
+        Object data[][] = new Object[record.size()][5];
+        int x = 0;
+
+        for (PelangganEntity brg : record) {
+            data[x][0] = brg.getIdPelanggan();
+            data[x][1] = brg.getNama();
+            data[x][2] = brg.getJenisKelamin();
+            data[x][3] = brg.getAlamat();
+            data[x][4] = brg.getNoTelp();
+            x++;
+        }
+        String judul[] = {"id_pelanggan", "nama_pelanggan", "jenis_kelamin",
+            "alamat", "no_telepon"};
+        tablePelanggan.setModel(new DefaultTableModel(data, judul));
+//        jScrollPane2.setViewportView(tablePelanggan);
+    }
+
+    void isiText() {
+        PelangganEntity plg = record.get(row);
+        this.txt_idPelanggan.setText(plg.getIdPelanggan());
+        this.txt_namaPelanggan.setText(plg.getNama());
+        this.txt_alamat.setText(plg.getAlamat());
+        this.txt_noTelepon.setText(plg.getNoTelp());
+        if (plg.getJenisKelamin().equals("L")) {
+            rBtn_LK.setSelected(true);
+        }
+        if (plg.getJenisKelamin().equals("P")) {
+            rBtn_PR.setSelected(true);
+        }
     }
 
     /**
@@ -30,30 +123,31 @@ public class PelangganView extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tablePelanggan = new javax.swing.JTable();
         jPanel2 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        jPanel5 = new javax.swing.JPanel();
+        simpanButton = new javax.swing.JButton();
+        ubahButton = new javax.swing.JButton();
+        hapusButton = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
-        jTextField4 = new javax.swing.JTextField();
+        txt_noTelepon = new javax.swing.JTextField();
         jScrollPane3 = new javax.swing.JScrollPane();
-        jTextArea2 = new javax.swing.JTextArea();
+        txt_alamat = new javax.swing.JTextArea();
         jLabel7 = new javax.swing.JLabel();
-        jRadioButton3 = new javax.swing.JRadioButton();
-        jRadioButton4 = new javax.swing.JRadioButton();
+        rBtn_LK = new javax.swing.JRadioButton();
+        rBtn_PR = new javax.swing.JRadioButton();
         jLabel8 = new javax.swing.JLabel();
-        jTextField5 = new javax.swing.JTextField();
+        txt_namaPelanggan = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
-        jTextField6 = new javax.swing.JTextField();
+        txt_idPelanggan = new javax.swing.JTextField();
         jLabel10 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tablePelanggan.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -79,31 +173,56 @@ public class PelangganView extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(tablePelanggan);
 
         jPanel2.setPreferredSize(new java.awt.Dimension(200, 139));
         jPanel2.setLayout(new java.awt.GridBagLayout());
 
-        jButton1.setText("Simpan");
-        jPanel2.add(jButton1, new java.awt.GridBagConstraints());
+        jPanel5.setPreferredSize(new java.awt.Dimension(200, 139));
+        jPanel5.setLayout(new java.awt.GridBagLayout());
 
-        jButton2.setText("Ubah");
-        jPanel2.add(jButton2, new java.awt.GridBagConstraints());
+        simpanButton.setText("Simpan");
+        simpanButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                simpanButtonActionPerformed(evt);
+            }
+        });
+        jPanel5.add(simpanButton, new java.awt.GridBagConstraints());
 
-        jButton3.setText("Hapus");
-        jPanel2.add(jButton3, new java.awt.GridBagConstraints());
+        ubahButton.setText("Ubah");
+        ubahButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ubahButtonActionPerformed(evt);
+            }
+        });
+        jPanel5.add(ubahButton, new java.awt.GridBagConstraints());
+
+        hapusButton.setText("Hapus");
+        hapusButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                hapusButtonActionPerformed(evt);
+            }
+        });
+        jPanel5.add(hapusButton, new java.awt.GridBagConstraints());
+
+        jPanel2.add(jPanel5, new java.awt.GridBagConstraints());
 
         jLabel6.setText("No Tlp");
 
-        jTextArea2.setColumns(20);
-        jTextArea2.setRows(5);
-        jScrollPane3.setViewportView(jTextArea2);
+        txt_alamat.setColumns(20);
+        txt_alamat.setRows(5);
+        jScrollPane3.setViewportView(txt_alamat);
 
         jLabel7.setText("Alamat");
 
-        jRadioButton3.setText("Laki - Laki");
+        rBtn_LK.setText("Laki - Laki");
+        rBtn_LK.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rBtn_LKActionPerformed(evt);
+            }
+        });
 
-        jRadioButton4.setText("Perempuan");
+        rBtn_PR.setText("Perempuan");
 
         jLabel8.setText("Jenis Kelamin");
 
@@ -115,56 +234,52 @@ public class PelangganView extends javax.swing.JFrame {
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 452, Short.MAX_VALUE)
-            .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanel4Layout.createSequentialGroup()
-                    .addGap(72, 72, 72)
-                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jLabel10)
-                        .addComponent(jLabel9)
-                        .addComponent(jLabel8)
-                        .addComponent(jLabel7)
-                        .addComponent(jLabel6))
-                    .addGap(56, 56, 56)
-                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(jPanel4Layout.createSequentialGroup()
-                                .addComponent(jRadioButton3)
-                                .addGap(37, 37, 37)
-                                .addComponent(jRadioButton4))
-                            .addComponent(jScrollPane3)
-                            .addComponent(jTextField5)
-                            .addComponent(jTextField6))
-                        .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addContainerGap(73, Short.MAX_VALUE)))
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addGap(72, 72, 72)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel10)
+                    .addComponent(jLabel9)
+                    .addComponent(jLabel8)
+                    .addComponent(jLabel7)
+                    .addComponent(jLabel6))
+                .addGap(56, 56, 56)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(jPanel4Layout.createSequentialGroup()
+                            .addComponent(rBtn_LK)
+                            .addGap(37, 37, 37)
+                            .addComponent(rBtn_PR))
+                        .addComponent(jScrollPane3)
+                        .addComponent(txt_namaPelanggan)
+                        .addComponent(txt_idPelanggan))
+                    .addComponent(txt_noTelepon, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(73, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 265, Short.MAX_VALUE)
-            .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanel4Layout.createSequentialGroup()
-                    .addGap(7, 7, 7)
-                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel10)
-                        .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGap(18, 18, 18)
-                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel9)
-                        .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGap(32, 32, 32)
-                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel8)
-                        .addComponent(jRadioButton3)
-                        .addComponent(jRadioButton4))
-                    .addGap(18, 18, 18)
-                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jLabel7)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGap(18, 18, 18)
-                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel6))
-                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addGap(7, 7, 7)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel10)
+                    .addComponent(txt_idPelanggan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel9)
+                    .addComponent(txt_namaPelanggan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(32, 32, 32)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel8)
+                    .addComponent(rBtn_LK)
+                    .addComponent(rBtn_PR))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel7)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txt_noTelepon, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel6))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jLabel11.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
@@ -177,7 +292,7 @@ public class PelangganView extends javax.swing.JFrame {
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 575, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -243,6 +358,72 @@ public class PelangganView extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void simpanButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_simpanButtonActionPerformed
+        try {
+            PelangganEntity pelanggan = new PelangganEntity();
+            pelanggan.setIdPelanggan(txt_idPelanggan.getText());
+            pelanggan.setNama(txt_namaPelanggan.getText());
+            if (rBtn_LK.isSelected()) {
+                jenisKelamin = "L";
+            }
+            if (rBtn_PR.isSelected()) {
+                jenisKelamin = "P";
+            }
+            pelanggan.setJenisKelamin(jenisKelamin);
+            pelanggan.setAlamat(txt_alamat.getText());
+            pelanggan.setNoTelp(txt_noTelepon.getText());
+            plgServis.insert(pelanggan);
+            this.statusAwal();
+            JOptionPane.showMessageDialog(this, "Data berhasil disimpan");
+        } catch (Exception e) {
+            Logger.getLogger(PelangganEntity.class.getName()).log(Level.SEVERE,
+                    null, e);
+            JOptionPane.showMessageDialog(this, e.getMessage());
+        }
+    }//GEN-LAST:event_simpanButtonActionPerformed
+
+    private void rBtn_LKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rBtn_LKActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_rBtn_LKActionPerformed
+
+    private void ubahButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ubahButtonActionPerformed
+        try {
+            PelangganEntity pelanggan = new PelangganEntity();
+            pelanggan.setIdPelanggan(txt_idPelanggan.getText());
+            pelanggan.setNama(txt_namaPelanggan.getText());
+            if (rBtn_LK.isSelected()) {
+                jenisKelamin = "L";
+            }
+            if (rBtn_PR.isSelected()) {
+                jenisKelamin = "P";
+            }
+            pelanggan.setJenisKelamin(jenisKelamin);
+            pelanggan.setAlamat(txt_alamat.getText());
+            pelanggan.setNoTelp(txt_noTelepon.getText());
+            plgServis.update(pelanggan);
+            this.statusAwal();
+            JOptionPane.showMessageDialog(this, "Data berhasil diubah");
+        } catch (Exception e) {
+            Logger.getLogger(PelangganEntity.class.getName()).log(Level.SEVERE,
+                    null, e);
+            JOptionPane.showMessageDialog(this, e.getMessage());
+        }
+    }//GEN-LAST:event_ubahButtonActionPerformed
+
+    private void hapusButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hapusButtonActionPerformed
+        PelangganEntity pelanggan = new PelangganEntity();
+        String idPelanggan = txt_idPelanggan.getText();
+        try {
+            plgServis.delete(idPelanggan);
+            this.statusAwal();
+            JOptionPane.showMessageDialog(this, "Data berhasil dihapus");
+        } catch (Exception e) {
+            Logger.getLogger(PelangganEntity.class.getName()).log(Level.SEVERE,
+                    null, e);
+            JOptionPane.showMessageDialog(this, e.getMessage());
+        }
+    }//GEN-LAST:event_hapusButtonActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -253,20 +434,25 @@ public class PelangganView extends javax.swing.JFrame {
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
          */
         try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+            for (javax.swing.UIManager.LookAndFeelInfo info
+                    : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(PelangganView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PelangganView.class.getName()).
+                    log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(PelangganView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PelangganView.class.getName()).
+                    log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(PelangganView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PelangganView.class.getName()).
+                    log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(PelangganView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PelangganView.class.getName()).
+                    log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
@@ -279,9 +465,7 @@ public class PelangganView extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
+    private javax.swing.JButton hapusButton;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
@@ -293,14 +477,17 @@ public class PelangganView extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
-    private javax.swing.JRadioButton jRadioButton3;
-    private javax.swing.JRadioButton jRadioButton4;
+    private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTextArea jTextArea2;
-    private javax.swing.JTextField jTextField4;
-    private javax.swing.JTextField jTextField5;
-    private javax.swing.JTextField jTextField6;
+    private javax.swing.JRadioButton rBtn_LK;
+    private javax.swing.JRadioButton rBtn_PR;
+    private javax.swing.JButton simpanButton;
+    private javax.swing.JTable tablePelanggan;
+    private javax.swing.JTextArea txt_alamat;
+    private javax.swing.JTextField txt_idPelanggan;
+    private javax.swing.JTextField txt_namaPelanggan;
+    private javax.swing.JTextField txt_noTelepon;
+    private javax.swing.JButton ubahButton;
     // End of variables declaration//GEN-END:variables
 }

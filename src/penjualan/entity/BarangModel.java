@@ -5,13 +5,13 @@
  */
 package penjualan.entity;
 
-import penjualan.interfc.EntityInterfc;
+import penjualan.interfc.EntityInterface;
 
 /**
  *
  * @author fadil
  */
-public class BarangModel implements EntityInterfc {
+public class BarangModel implements EntityInterface {
     private String kodeBarang, namaBarang;
     
     int jumlah, harga;
@@ -66,7 +66,7 @@ public class BarangModel implements EntityInterfc {
     
 
     @Override
-    public EntityInterfc newObject(String[] args) {
+    public EntityInterface newObject(String[] args) {
         return new BarangModel(args[0], args[1], args[2], args[3]);
     }
 }

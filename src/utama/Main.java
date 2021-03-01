@@ -7,8 +7,8 @@ package utama;
 
 import java.util.ArrayList;
 import penjualan.entity.BarangModel;
-import penjualan.interfc.EntityInterfc;
 import penjualan.koneksi.KoneksiSql;
+import penjualan.interfc.EntityInterface;
 
 /**
  *
@@ -22,9 +22,7 @@ public class Main {
     public static void main(String[] args) {
         try {
             KoneksiSql koneksiSql = new KoneksiSql();
-            
-            ArrayList<EntityInterfc> entities = koneksiSql.select("SELECT * FROM barang", new BarangModel());
-            System.out.println(((BarangModel) entities.get(0)).getNamaBarang());
+            ArrayList<EntityInterface> entities = koneksiSql.select("SELECT * FROM barang", new BarangModel());
             
         } catch (Exception e) {
             e.printStackTrace();
