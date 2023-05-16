@@ -13,6 +13,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import penjualan.entity.BarangEntity;
 import penjualan.interfc.BarangInterface;
+import penjualan.interfc.EntityInterface;
 import penjualan.koneksi.KoneksiSql;
 
 /**
@@ -22,7 +23,7 @@ import penjualan.koneksi.KoneksiSql;
 public class BarangImplement implements BarangInterface {
     public BarangEntity insert(BarangEntity barang) throws SQLException {
         PreparedStatement st = KoneksiSql.getKoneksi().prepareStatement(
-                "insert into pelanggan values(?, ?, ?, ?);"
+                "insert into barang values(?, ?, ?, ?);"
         );
         st.setString(1, barang.getKodeBarang());
         st.setString(2, barang.getNamaBarang());
@@ -53,10 +54,10 @@ public class BarangImplement implements BarangInterface {
         st.executeUpdate();
     }
     
-    public List<BarangEntity> getAll() throws SQLException {
+    public List<EntityInterface> getAll() throws SQLException {
         Statement st = KoneksiSql.getKoneksi().createStatement();
         ResultSet rs = st.executeQuery("select * from barang;");
-        List<BarangEntity> listBarang = new ArrayList<BarangEntity>();
+        List<EntityInterface> listBarang = new ArrayList<EntityInterface>();
         
         while(rs.next()) {
             BarangEntity barang = new BarangEntity();

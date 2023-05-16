@@ -10,7 +10,6 @@ package penjualan.interfc;
  * @author fadil
  */
 public interface EntityInterface {
-    
     String[] getNamaKolom();
     String[] getHeader();
     Object[] toTableRow();

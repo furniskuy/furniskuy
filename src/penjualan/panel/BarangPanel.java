@@ -1,39 +1,39 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package penjualan.view;
+package penjualan.panel;
+
 
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
-import javax.swing.JTable;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
-import penjualan.entity.BarangModel;
 import penjualan.entity.BarangEntity;
-import penjualan.interfc.BarangInterface;
-import penjualan.koneksi.KoneksiSql;
+import penjualan.implement.BarangImplement;
 import penjualan.interfc.EntityInterface;
+import penjualan.koneksi.KoneksiSql;
+
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
+ */
 
 /**
  *
- * @author fadil
+ * @author fadildesk
  */
-public class BarangView extends javax.swing.JFrame {
+public class BarangPanel extends javax.swing.JPanel {
 
     KoneksiSql koneksiSql = new KoneksiSql();
-    ArrayList<EntityInterface> listBarang = new ArrayList();
+    List<EntityInterface> listBarang = new ArrayList();
 
-    BarangModel emptyBarangModel = new BarangModel();
-    BarangModel selectedBarangModel = null;
+    BarangEntity emptyBarangEntity = new BarangEntity();
+    BarangEntity selectedBarangEntity = null;
+    BarangImplement barangImplement = new BarangImplement();
 
     /**
      * Creates new form BarangView
      */
-    public BarangView() {
+    public BarangPanel() {
         initComponents();
         getListBarang();
 
@@ -53,9 +53,9 @@ public class BarangView extends javax.swing.JFrame {
     }
 
     void getListBarang() {
-        DefaultTableModel dtm = new DefaultTableModel(null, emptyBarangModel.getHeader());
+        DefaultTableModel dtm = new DefaultTableModel(null, emptyBarangEntity.getHeader());
         try {
-            listBarang = koneksiSql.select("SELECT * FROM barang", emptyBarangModel);
+            listBarang = barangImplement.getAll();
             for (int i = 0; i < listBarang.size(); i++) {
                 dtm.addRow(listBarang.get(i).toTableRowWithIndex(i));
             }
@@ -66,18 +66,18 @@ public class BarangView extends javax.swing.JFrame {
     }
 
     void setFieldValueAsSelectedRow(int index) {
-        selectedBarangModel = ((BarangModel) listBarang.get(index));
+        selectedBarangEntity = ((BarangEntity) listBarang.get(index));
 
-        kodeBarangField.setText(selectedBarangModel.getKodeBarang());
+        kodeBarangField.setText(selectedBarangEntity.getKodeBarang());
         kodeBarangField.setEnabled(false);
 
-        namaBarangField.setText(selectedBarangModel.getNamaBarang());
-        jumlahField.setText("" + selectedBarangModel.getJumlah() + "");
-        hargaField.setText("" + selectedBarangModel.getHarga() + "");
+        namaBarangField.setText(selectedBarangEntity.getNamaBarang());
+        jumlahField.setText("" + selectedBarangEntity.getJumlah() + "");
+        hargaField.setText("" + selectedBarangEntity.getHarga() + "");
     }
 
     void clearField() {
-        selectedBarangModel = null;
+        selectedBarangEntity = null;
         kodeBarangField.setText("");
         kodeBarangField.setEnabled(true);
 
@@ -98,16 +98,15 @@ public class BarangView extends javax.swing.JFrame {
 
     void simpanData() {
         if (!fieldIsEmpty() && !(kodeBarangField.getText().isEmpty())) {
-            String join = String.join(", ", emptyBarangModel.getNamaKolom());
-            String query = "INSERT INTO barang(" + join + ") VALUES("
-                    + addSingleQuote(kodeBarangField.getText()) + ", "
-                    + addSingleQuote(namaBarangField.getText()) + ", "
-                    + jumlahField.getText() + ", "
-                    + hargaField.getText()
-                    + ");";
+            String join = String.join(", ", emptyBarangEntity.getNamaKolom());
+            BarangEntity barang = new BarangEntity();
+            barang.setKodeBarang(kodeBarangField.getText());
+            barang.setNamaBarang(namaBarangField.getText());
+            barang.setJumlah(jumlahField.getText());
+            barang.setHarga(hargaField.getText());
 
             try {
-                koneksiSql.update(query);
+                barangImplement.insert(barang);
                 JOptionPane.showMessageDialog(this, "Berhasil menyimpan data ke database");
                 getListBarang();
             } catch (Exception e) {
@@ -118,18 +117,16 @@ public class BarangView extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Data tidak boleh kosong");
         }
     }
-
     void updateData() {
-        if (selectedBarangModel != null) {
+        if (selectedBarangEntity != null) {
             if (!fieldIsEmpty() && !(kodeBarangField.getText().isEmpty())) {
-                String query = "UPDATE barang SET nama_barang = "
-                        + addSingleQuote(namaBarangField.getText()) + ", jumlah = "
-                        + jumlahField.getText() + ", harga = "
-                        + hargaField.getText()
-                        + " WHERE kode_barang = " + addSingleQuote(kodeBarangField.getText());
+                selectedBarangEntity.setNamaBarang(namaBarangField.getText());
+                selectedBarangEntity.setJumlah(jumlahField.getText());
+                selectedBarangEntity.setHarga(hargaField.getText());
+                selectedBarangEntity.setKodeBarang(kodeBarangField.getText());
 
                 try {
-                    koneksiSql.update(query);
+                    barangImplement.update(selectedBarangEntity);
                     JOptionPane.showMessageDialog(this, "Berhasil menngubah data dari database");
                     kodeBarangField.setEnabled(true);
                     getListBarang();
@@ -146,15 +143,13 @@ public class BarangView extends javax.swing.JFrame {
     }
 
     void hapusData() {
-        if (selectedBarangModel != null) {
+        if (selectedBarangEntity != null) {
 
-            int confirm = JOptionPane.showConfirmDialog(this, "Anda yakin ingin menghapus barang  " + selectedBarangModel.getKodeBarang(), "Konfirmasi", JOptionPane.YES_NO_OPTION);
+            int confirm = JOptionPane.showConfirmDialog(this, "Anda yakin ingin menghapus barang  " + selectedBarangEntity.getKodeBarang(), "Konfirmasi", JOptionPane.YES_NO_OPTION);
 
             if (confirm == 0) {
-
-                String query = "DELETE FROM barang WHERE kode_barang = '" + selectedBarangModel.getKodeBarang() + "';";
                 try {
-                    koneksiSql.update(query);
+                    barangImplement.delete(selectedBarangEntity.getKodeBarang());
                     JOptionPane.showMessageDialog(this, "Berhasil menghapus data dari database");
                     kodeBarangField.setEnabled(true);
                     getListBarang();
@@ -169,7 +164,7 @@ public class BarangView extends javax.swing.JFrame {
         }
 
     }
-
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -199,12 +194,8 @@ public class BarangView extends javax.swing.JFrame {
         jLabel17 = new javax.swing.JLabel();
         clearFieldButton = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
         jPanel2.setPreferredSize(new java.awt.Dimension(200, 139));
-        java.awt.GridBagLayout jPanel2Layout = new java.awt.GridBagLayout();
-        jPanel2Layout.columnWidths = new int[] {0, 100, 0};
-        jPanel2.setLayout(jPanel2Layout);
+        jPanel2.setLayout(new java.awt.GridBagLayout());
 
         simpanButton.setText("Simpan");
         simpanButton.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -262,13 +253,13 @@ public class BarangView extends javax.swing.JFrame {
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 716, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 394, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE))
         );
 
         jLabel13.setText("Kode Barang");
@@ -344,7 +335,7 @@ public class BarangView extends javax.swing.JFrame {
                 .addContainerGap())
             .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
+                .addGap(0, 120, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addComponent(jPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -373,18 +364,18 @@ public class BarangView extends javax.swing.JFrame {
                         .addGap(0, 0, Short.MAX_VALUE))))
         );
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 61, Short.MAX_VALUE))
         );
-
-        pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void simpanButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_simpanButtonMouseClicked
@@ -403,40 +394,6 @@ public class BarangView extends javax.swing.JFrame {
         clearField();        // TODO add your handling code here:
     }//GEN-LAST:event_clearFieldButtonMouseClicked
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(BarangView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(BarangView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(BarangView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(BarangView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new BarangView().setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton clearFieldButton;

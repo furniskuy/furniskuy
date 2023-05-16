@@ -1,9 +1,9 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
-package penjualan.view;
+package penjualan.panel;
+
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -13,27 +13,19 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import javax.swing.table.DefaultTableModel;
-import penjualan.entity.BarangModel;
 import penjualan.implement.TransaksiImplement;
-import penjualan.interfc.EntityInterface;
 import penjualan.koneksi.KoneksiSql;
-
 /**
  *
- * @author fadil
+ * @author fadildesk
  */
-public class TransaksiView extends javax.swing.JFrame {
+public class TransaksiPanel extends javax.swing.JPanel {
 
     /**
-     * Creates new form TransaksiView
+     * Creates new form TransaksiPanel
      */
-    public TransaksiView() {
+    public TransaksiPanel() {
         initComponents();
-        
-//        dateNow();
-//        genFak();
-//        setKodeBarang();
-//        setIdPelanggan();
     }
     
     private void setKodeBarang() throws SQLException {
@@ -116,8 +108,6 @@ public class TransaksiView extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel5 = new javax.swing.JLabel();
-        jScrollPane2 = new javax.swing.JScrollPane();
         jPanel4 = new javax.swing.JPanel();
         jPanel5 = new javax.swing.JPanel();
         jScrollPane4 = new javax.swing.JScrollPane();
@@ -150,10 +140,6 @@ public class TransaksiView extends javax.swing.JFrame {
         tanggalField = new javax.swing.JTextField();
         tambahDataButton = new javax.swing.JButton();
         jLabel8 = new javax.swing.JLabel();
-
-        jLabel5.setText("jLabel5");
-
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         tableBarang.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -435,42 +421,27 @@ public class TransaksiView extends javax.swing.JFrame {
                 .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jScrollPane2.setViewportView(jPanel4);
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addGap(0, 870, Short.MAX_VALUE)
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addGap(0, 0, Short.MAX_VALUE)
+                    .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(0, 0, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 747, Short.MAX_VALUE)
-                .addContainerGap())
+            .addGap(0, 760, Short.MAX_VALUE)
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addGap(0, 0, Short.MAX_VALUE)
+                    .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(0, 0, Short.MAX_VALUE)))
         );
-
-        pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void hapusButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hapusButtonActionPerformed
-        int delData = this.tableBarang.getSelectedRow();
-        
-        if(delData == -1){
-            return;
-        }
-        else{
-            DefaultTableModel model = (DefaultTableModel) tableBarang.getModel();
-            model.removeRow(delData);
-            this.hitungTotalBayar();
-        }
-    }//GEN-LAST:event_hapusButtonActionPerformed
-
-    private void simpanFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_simpanFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_simpanFieldActionPerformed
 
     private void selectBarangItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_selectBarangItemStateChanged
         String kode = (String) selectBarang.getSelectedItem();
@@ -487,6 +458,43 @@ public class TransaksiView extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_selectBarangItemStateChanged
 
+    private void tambahBarangButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tambahBarangButtonActionPerformed
+        String kode = (String) selectBarang.getSelectedItem();
+        String kodeFix = kode.substring(0,4);
+        String namaBarang  = kode.substring(5,kode.length() - 0);
+
+        int harga = Integer.valueOf(hargaField.getText());
+        int jumlah = Integer.valueOf(jumlahField.getText());
+        long subTotal = harga * jumlah;
+
+        Object[] data = new Object[5];
+        data[0] = kodeFix;
+        data[1] = namaBarang;
+        data[2] = hargaField.getText();
+        data[3] = jumlahField.getText();
+        data[4] = subTotal;
+
+        DefaultTableModel model = (DefaultTableModel) tableBarang.getModel();
+        model.addRow(data);
+    }//GEN-LAST:event_tambahBarangButtonActionPerformed
+
+    private void hapusButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hapusButtonActionPerformed
+        int delData = this.tableBarang.getSelectedRow();
+
+        if(delData == -1){
+            return;
+        }
+        else{
+            DefaultTableModel model = (DefaultTableModel) tableBarang.getModel();
+            model.removeRow(delData);
+            this.hitungTotalBayar();
+        }
+    }//GEN-LAST:event_hapusButtonActionPerformed
+
+    private void simpanFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_simpanFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_simpanFieldActionPerformed
+
     private void selectPelangganItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_selectPelangganItemStateChanged
         String kode = (String) selectPelanggan.getSelectedItem();
         String kodeFix = kode.substring(0,4);
@@ -502,60 +510,6 @@ public class TransaksiView extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_selectPelangganItemStateChanged
 
-    private void tambahBarangButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tambahBarangButtonActionPerformed
-        String kode = (String) selectBarang.getSelectedItem();
-        String kodeFix = kode.substring(0,4);
-        String namaBarang  = kode.substring(5,kode.length() - 0);
-        
-        int harga = Integer.valueOf(hargaField.getText());
-        int jumlah = Integer.valueOf(jumlahField.getText());
-        long subTotal = harga * jumlah;
-        
-        Object[] data = new Object[5];
-        data[0] = kodeFix;
-        data[1] = namaBarang;
-        data[2] = hargaField.getText();
-        data[3] = jumlahField.getText();
-        data[4] = subTotal;
-        
-        DefaultTableModel model = (DefaultTableModel) tableBarang.getModel();
-        model.addRow(data);
-    }//GEN-LAST:event_tambahBarangButtonActionPerformed
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(TransaksiView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(TransaksiView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(TransaksiView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(TransaksiView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new TransaksiView().setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea alamatField;
@@ -569,7 +523,6 @@ public class TransaksiView extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
@@ -578,7 +531,6 @@ public class TransaksiView extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
-    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JTextField jumlahField;

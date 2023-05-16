@@ -16,5 +16,5 @@ public interface BarangInterface {
     BarangEntity insert(BarangEntity barang) throws SQLException;
     void update(BarangEntity barang) throws SQLException;
     void delete(String kodeBarang) throws SQLException;
-    List<BarangEntity> getAll() throws SQLException;
+    List<EntityInterface> getAll() throws SQLException;
 }

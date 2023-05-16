@@ -9,17 +9,17 @@ package penjualan.entity;
  *
  * @author fadil
  */
-public class PelangganEntity {
-    private int idPelanggan;
+public class PegawaiEntity {
+    private int idPegawai;
     private String nama, jenisKelamin, alamat, noTelp;
     
-    String idPel = String.valueOf(idPelanggan);
+    String idPel = String.valueOf(idPegawai);
 
-    public String getIdPelanggan() {
+    public String getIdPegawai() {
         return idPel;
     }
 
-    public void setIdPelanggan(String idPel) {
+    public void setIdPegawai(String idPel) {
         this.idPel = idPel;
     }
 

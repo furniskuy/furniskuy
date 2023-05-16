@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package utama;
+package penjualan.view;
 
+import java.awt.Component;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.RenderingHints;
@@ -12,18 +13,27 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
+import penjualan.panel.BarangPanel;
+import penjualan.panel.TransaksiPanel;
 
 /**
  *
  * @author fadil
  */
-public class Penjualan extends javax.swing.JFrame {
+public class PenjualanView extends javax.swing.JFrame {
 
     /**
-     * Creates new form Penjualan
+     * Creates new form PenjualanView
      */
-    public Penjualan() {
+    public PenjualanView() {
         initComponents();
+    }
+    
+    private void replaceMenuView(Component c) {
+        menuView.removeAll();
+        menuView.add(c, new java.awt.GridBagConstraints());
+        menuView.revalidate();
+        menuView.repaint();
     }
 
     /**
@@ -42,7 +52,7 @@ public class Penjualan extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        jPanel2 = new javax.swing.JPanel();
+        menuView = new javax.swing.JPanel();
         jLabel7 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -54,14 +64,30 @@ public class Penjualan extends javax.swing.JFrame {
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/home-run.png"))); // NOI18N
         jLabel1.setText("Home");
+        jLabel1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                homeClicked(evt);
+            }
+        });
         jPanel1.add(jLabel1, new java.awt.GridBagConstraints());
 
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/main.png"))); // NOI18N
         jLabel2.setText("Master");
+        jLabel2.setName("master"); // NOI18N
+        jLabel2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                masterClicked(evt);
+            }
+        });
         jPanel1.add(jLabel2, new java.awt.GridBagConstraints());
 
         jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/money.png"))); // NOI18N
         jLabel3.setText("Transaksi");
+        jLabel3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                transaksiClicked(evt);
+            }
+        });
         jPanel1.add(jLabel3, new java.awt.GridBagConstraints());
 
         jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/result.png"))); // NOI18N
@@ -74,9 +100,15 @@ public class Penjualan extends javax.swing.JFrame {
 
         jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/logout.png"))); // NOI18N
         jLabel6.setText("Logout");
+        jLabel6.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                logoutClicked(evt);
+            }
+        });
         jPanel1.add(jLabel6, new java.awt.GridBagConstraints());
 
-        jPanel2.setLayout(new java.awt.GridBagLayout());
+        menuView.setName(""); // NOI18N
+        menuView.setLayout(new java.awt.GridBagLayout());
 
         BufferedImage image = null;
         try
@@ -90,60 +122,46 @@ public class Penjualan extends javax.swing.JFrame {
         ImageIcon imageIcon = new ImageIcon(fitimage(image, 576, 369));
         jLabel7.setForeground(new java.awt.Color(255, 255, 255));
         jLabel7.setIcon(imageIcon);
-        jPanel2.add(jLabel7, new java.awt.GridBagConstraints());
+        menuView.add(jLabel7, new java.awt.GridBagConstraints());
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 580, Short.MAX_VALUE)
-            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 858, Short.MAX_VALUE)
+            .addComponent(menuView, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 414, Short.MAX_VALUE))
+                .addComponent(menuView, javax.swing.GroupLayout.DEFAULT_SIZE, 595, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Penjualan.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Penjualan.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Penjualan.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Penjualan.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
+    private void homeClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_homeClicked
+        // TODO add your handling code here:
+        replaceMenuView(jLabel7);
+    }//GEN-LAST:event_homeClicked
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Penjualan().setVisible(true);
-            }
-        });
-    }
+    private void masterClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_masterClicked
+        // TODO add your handling code here:
+        replaceMenuView(new BarangPanel());
+    }//GEN-LAST:event_masterClicked
+
+    private void logoutClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logoutClicked
+        // TODO add your handling code here:
+        this.setVisible(false);
+        new LoginView().setVisible(true);
+    }//GEN-LAST:event_logoutClicked
+
+    private void transaksiClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_transaksiClicked
+        // TODO add your handling code here:
+        replaceMenuView(new TransaksiPanel());
+    }//GEN-LAST:event_transaksiClicked
     
     private Image fitimage(Image img , int w , int h) {
         BufferedImage resizedimage = new BufferedImage(w,h,BufferedImage.TYPE_INT_RGB);
@@ -163,6 +181,6 @@ public class Penjualan extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     public javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel menuView;
     // End of variables declaration//GEN-END:variables
 }
