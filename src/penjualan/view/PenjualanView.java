@@ -113,13 +113,13 @@ public class PenjualanView extends javax.swing.JFrame {
         BufferedImage image = null;
         try
         {
-            image = ImageIO.read(new File(getClass().getResource("/image/logo-ppi.png").toURI()));
+            image = ImageIO.read(new File(getClass().getResource("/image/logo-company.png").toURI()));
 
         } catch (Exception e)
         {
             e.printStackTrace();
         }
-        ImageIcon imageIcon = new ImageIcon(fitimage(image, 576, 369));
+        ImageIcon imageIcon = new ImageIcon(fitimage(image, 380, 230));
         jLabel7.setForeground(new java.awt.Color(255, 255, 255));
         jLabel7.setIcon(imageIcon);
         menuView.add(jLabel7, new java.awt.GridBagConstraints());
@@ -179,7 +179,7 @@ public class PenjualanView extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    public javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel menuView;
     // End of variables declaration//GEN-END:variables

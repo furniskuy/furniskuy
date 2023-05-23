@@ -349,8 +349,7 @@
             </Property>
           </Properties>
           <AuxValues>
-            <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="BufferedImage image = null;&#xa;try &#xa;{&#xa;    image = ImageIO.read(new File(getClass().getResource(&quot;/image/logo-ppi.png&quot;).toURI()));&#xa;&#xa;} catch (Exception e) &#xa;{&#xa;    e.printStackTrace();&#xa;}&#xa;ImageIcon imageIcon = new ImageIcon(fitimage(image, 576, 369));"/>
-            <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
+            <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="BufferedImage image = null;&#xa;try &#xa;{&#xa;    image = ImageIO.read(new File(getClass().getResource(&quot;/image/logo-company.png&quot;).toURI()));&#xa;&#xa;} catch (Exception e) &#xa;{&#xa;    e.printStackTrace();&#xa;}&#xa;ImageIcon imageIcon = new ImageIcon(fitimage(image, 380, 230));"/>
           </AuxValues>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
