@@ -9,8 +9,8 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import penjualan.entity.BarangEntity;
 import penjualan.implement.BarangImplement;
-import penjualan.interfc.EntityInterface;
 import penjualan.koneksi.KoneksiSql;
+import penjualan.interfc.TableDataInterface;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -24,7 +24,7 @@ import penjualan.koneksi.KoneksiSql;
 public class BarangPanel extends javax.swing.JPanel {
 
     KoneksiSql koneksiSql = new KoneksiSql();
-    List<EntityInterface> listBarang = new ArrayList();
+    List<TableDataInterface> listBarang = new ArrayList();
 
     BarangEntity emptyBarangEntity = new BarangEntity();
     BarangEntity selectedBarangEntity = null;

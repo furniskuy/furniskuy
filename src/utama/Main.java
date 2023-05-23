@@ -5,8 +5,8 @@
  */
 package utama;
 
-import penjualan.view.PenjualanView;
 import penjualan.koneksi.KoneksiSql;
+import penjualan.view.LoginView;
 
 /**
  *
@@ -20,7 +20,7 @@ public class Main {
     public static void main(String[] args) {
         try {
             KoneksiSql koneksiSql = new KoneksiSql();
-            new PenjualanView().setVisible(true);
+            new LoginView().setVisible(true);
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("Todo: Display Error (" + e.getMessage() + ")");

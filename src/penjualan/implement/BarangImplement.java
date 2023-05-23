@@ -13,8 +13,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import penjualan.entity.BarangEntity;
 import penjualan.interfc.BarangInterface;
-import penjualan.interfc.EntityInterface;
 import penjualan.koneksi.KoneksiSql;
+import penjualan.interfc.TableDataInterface;
 
 /**
  *
@@ -54,10 +54,10 @@ public class BarangImplement implements BarangInterface {
         st.executeUpdate();
     }
     
-    public List<EntityInterface> getAll() throws SQLException {
+    public List<TableDataInterface> getAll() throws SQLException {
         Statement st = KoneksiSql.getKoneksi().createStatement();
         ResultSet rs = st.executeQuery("select * from barang;");
-        List<EntityInterface> listBarang = new ArrayList<EntityInterface>();
+        List<TableDataInterface> listBarang = new ArrayList<TableDataInterface>();
         
         while(rs.next()) {
             BarangEntity barang = new BarangEntity();
