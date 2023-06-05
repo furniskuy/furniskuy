@@ -79,10 +79,11 @@ public class PelangganPanel extends javax.swing.JPanel {
         jenisKelamin = "";
         lkRadio.setSelected(false);
         prRadio.setSelected(false);
+        simpanButton.setEnabled(true);
     }
    
     boolean fieldIsEmpty() {
-        return idPegawaiField.getText().isEmpty() || namaPegawaiField.getText().isEmpty() || jenisKelamin.isEmpty() || alamatField.getText().isEmpty() || noTeleponField.getText().isEmpty();
+        return namaPegawaiField.getText().isEmpty() || jenisKelamin.isEmpty() || alamatField.getText().isEmpty() || noTeleponField.getText().isEmpty();
     }
     
     void setFieldValueAsSelectedRow(int row) {

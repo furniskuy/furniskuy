@@ -22,12 +22,12 @@ import penjualan.interfc.TableDataInterface;
 public class PelangganImplement implements PelangganInterface  {
     public PelangganEntity insert(PelangganEntity pelanggan) throws SQLException {
         PreparedStatement st = KoneksiSql.getKoneksi().prepareStatement(
-                "insert into pelanggan values( ?, ?, ?, ?);"
+                "insert into pelanggan(nama, jk, alamat, notlp) values( ?, ?, ?, ?);"
         );
-        st.setString(2, pelanggan.getNama());
-        st.setString(3, pelanggan.getJenisKelamin());
-        st.setString(4, pelanggan.getAlamat());
-        st.setString(5, pelanggan.getNoTelp());
+        st.setString(1, pelanggan.getNama());
+        st.setString(2, pelanggan.getJenisKelamin());
+        st.setString(3, pelanggan.getAlamat());
+        st.setString(4, pelanggan.getNoTelp());
         st.executeUpdate();
         
         return pelanggan;
