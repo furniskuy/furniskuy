@@ -22,21 +22,23 @@ public class StatistikView extends javax.swing.JFrame {
      */
     public StatistikView() {
         initComponents();
+        setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
+                
         pieChartBarang.setChartType(penjualan.panel.PieChart.PeiChartType.DONUT_CHART);
         getPenjualanBarangData();
     }
-    
+
     void getPenjualanBarangData() {
-         try {
+        try {
             Statement st = KoneksiSql.getKoneksi().createStatement();
             ResultSet rs = st.executeQuery("SELECT concat(kode_barang, nama_barang) as nama_barang, sum(barang.jumlah) as jumlah FROM transaksi join barang on barang.kode_barang = transaksi.id_barang group by kode_barang;");
-            while(rs.next()) {
-                pieChartBarang.addData(new PieChartModel(rs.getString("nama_barang"), rs.getInt("jumlah"), new Color((int)(Math.random() * 0x1000000))));
+            while (rs.next()) {
+                pieChartBarang.addData(new PieChartModel(rs.getString("nama_barang"), rs.getInt("jumlah"), new Color((int) (Math.random() * 0x1000000))));
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Gagal mendapat data dari database \n" + e.getMessage());
         }
-            
+
     }
 
     /**

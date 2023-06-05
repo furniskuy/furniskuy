@@ -50,7 +50,7 @@ public class LoginView extends javax.swing.JFrame {
 
         emailField.setToolTipText("Email");
 
-        jLabel2.setText("Email");
+        jLabel2.setText("Username");
 
         jLabel3.setText("Password");
 
@@ -66,7 +66,7 @@ public class LoginView extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(83, Short.MAX_VALUE)
+                .addContainerGap(80, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel3)
                     .addComponent(jLabel2))

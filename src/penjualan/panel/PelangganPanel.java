@@ -192,6 +192,7 @@ public class PelangganPanel extends javax.swing.JPanel {
         jLabel9 = new javax.swing.JLabel();
         idPegawaiField = new javax.swing.JTextField();
         jLabel10 = new javax.swing.JLabel();
+        clearFieldButton = new javax.swing.JButton();
         jLabel12 = new javax.swing.JLabel();
 
         tablePelanggan.setModel(new javax.swing.table.DefaultTableModel(
@@ -288,6 +289,14 @@ public class PelangganPanel extends javax.swing.JPanel {
 
         jLabel10.setText("ID Pelanggan");
 
+        clearFieldButton.setText("Clear Field");
+        clearFieldButton.setToolTipText("");
+        clearFieldButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                clearFieldButtonMouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
@@ -302,16 +311,21 @@ public class PelangganPanel extends javax.swing.JPanel {
                     .addComponent(jLabel6))
                 .addGap(56, 56, 56)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addGroup(jPanel4Layout.createSequentialGroup()
-                            .addComponent(lkRadio)
-                            .addGap(37, 37, 37)
-                            .addComponent(prRadio))
-                        .addComponent(jScrollPane3)
-                        .addComponent(namaPegawaiField)
-                        .addComponent(idPegawaiField))
-                    .addComponent(noTeleponField, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(73, Short.MAX_VALUE))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addComponent(noTeleponField, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 223, Short.MAX_VALUE))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(jPanel4Layout.createSequentialGroup()
+                                .addComponent(lkRadio)
+                                .addGap(37, 37, 37)
+                                .addComponent(prRadio))
+                            .addComponent(jScrollPane3)
+                            .addComponent(namaPegawaiField)
+                            .addComponent(idPegawaiField))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(clearFieldButton)))
+                .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -319,7 +333,8 @@ public class PelangganPanel extends javax.swing.JPanel {
                 .addGap(7, 7, 7)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel10)
-                    .addComponent(idPegawaiField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(idPegawaiField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(clearFieldButton))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel9)
@@ -341,7 +356,7 @@ public class PelangganPanel extends javax.swing.JPanel {
         );
 
         jLabel12.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        jLabel12.setText("Pegawai");
+        jLabel12.setText("Pelanggan");
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -354,12 +369,12 @@ public class PelangganPanel extends javax.swing.JPanel {
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGap(56, 56, 56)
                         .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 7, Short.MAX_VALUE)))
+                        .addGap(0, 21, Short.MAX_VALUE)))
                 .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(253, 253, 253)
                 .addComponent(jLabel12)
-                .addGap(229, 229, 229))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -383,7 +398,7 @@ public class PelangganPanel extends javax.swing.JPanel {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(25, Short.MAX_VALUE)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -412,10 +427,15 @@ public class PelangganPanel extends javax.swing.JPanel {
         jenisKelamin = "P";
     }//GEN-LAST:event_prRadioActionPerformed
 
+    private void clearFieldButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_clearFieldButtonMouseClicked
+        clearField();        // TODO add your handling code here:
+    }//GEN-LAST:event_clearFieldButtonMouseClicked
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea alamatField;
     private javax.swing.ButtonGroup buttonGroup1;
+    private javax.swing.JButton clearFieldButton;
     private javax.swing.JButton hapusButton;
     private javax.swing.JTextField idPegawaiField;
     private javax.swing.JLabel jLabel10;

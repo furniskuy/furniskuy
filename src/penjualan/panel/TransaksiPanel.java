@@ -8,12 +8,10 @@ package penjualan.panel;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-import penjualan.entity.BarangEntity;
 import penjualan.entity.TransaksiEntity;
 import penjualan.implement.TransaksiImplement;
 import penjualan.koneksi.KoneksiSql;
@@ -421,7 +419,7 @@ public class TransaksiPanel extends javax.swing.JPanel {
 
     private void selectPelangganItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_selectPelangganItemStateChanged
         String kode = (String) selectPelanggan.getSelectedItem();
-        String kodeFix = kode.substring(0,1);
+        String kodeFix = kode.split("-")[0];
         try {
             Statement st = KoneksiSql.getKoneksi().createStatement();
             ResultSet rs = st.executeQuery("SELECT alamat, notlp FROM pelanggan WHERE id_pelanggan= '" + kodeFix + "';");
@@ -440,12 +438,11 @@ public class TransaksiPanel extends javax.swing.JPanel {
 
     private void tambahBarangButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tambahBarangButtonActionPerformed
         String kode = (String) selectBarang.getSelectedItem();
-        String kodeFix = kode.substring(0,4);
-        String namaBarang  = kode.substring(5,kode.length() - 0);
-        
+        String kodeFix = kode.split("-")[0];
+        String namaBarang  = kode.split("-")[1];
         
         String idPelangganStr = (String) selectPelanggan.getSelectedItem();
-        int idPelanggan = Integer.parseInt(idPelangganStr.substring(0, 1));
+        int idPelanggan = Integer.parseInt(idPelangganStr.split("-")[0]);
 
         int harga = Integer.valueOf(hargaField.getText());
         int jumlah = Integer.valueOf(jumlahField.getText());
@@ -473,7 +470,7 @@ public class TransaksiPanel extends javax.swing.JPanel {
 
     private void selectBarangItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_selectBarangItemStateChanged
         String kode = (String) selectBarang.getSelectedItem();
-        String kodeFix = kode.substring(0,4);
+        String kodeFix = kode.split("-")[0];
         try {
             Statement st = KoneksiSql.getKoneksi().createStatement();
             ResultSet rs = st.executeQuery("SELECT jumlah, harga FROM barang WHERE kode_barang = '" + kodeFix + "';");

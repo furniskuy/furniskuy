@@ -167,7 +167,6 @@ public class PenjualanView extends javax.swing.JFrame {
     }//GEN-LAST:event_masterClicked
 
     private void logoutClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logoutClicked
-        // TODO add your handling code here:
         this.setVisible(false);
         new LoginView().setVisible(true);
     }//GEN-LAST:event_logoutClicked
