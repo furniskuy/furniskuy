@@ -5,7 +5,6 @@
  */
 package utama;
 
-import penjualan.koneksi.KoneksiSql;
 import penjualan.view.LoginView;
 
 /**
@@ -19,7 +18,6 @@ public class Main {
      */
     public static void main(String[] args) {
         try {
-            KoneksiSql koneksiSql = new KoneksiSql();
             new LoginView().setVisible(true);
         } catch (Exception e) {
             e.printStackTrace();

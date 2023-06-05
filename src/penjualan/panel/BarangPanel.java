@@ -23,7 +23,6 @@ import penjualan.interfc.TableDataInterface;
  */
 public class BarangPanel extends javax.swing.JPanel {
 
-    KoneksiSql koneksiSql = new KoneksiSql();
     List<TableDataInterface> listBarang = new ArrayList();
 
     BarangEntity emptyBarangEntity = new BarangEntity();
@@ -92,13 +91,8 @@ public class BarangPanel extends javax.swing.JPanel {
         return namaBarangField.getText().isEmpty() || jumlahField.getText().isEmpty() || hargaField.getText().isEmpty();
     }
 
-    String addSingleQuote(String str) {
-        return "'" + str + "'";
-    }
-
     void simpanData() {
         if (!fieldIsEmpty() && !(kodeBarangField.getText().isEmpty())) {
-            String join = String.join(", ", emptyBarangEntity.getNamaKolom());
             BarangEntity barang = new BarangEntity();
             barang.setKodeBarang(kodeBarangField.getText());
             barang.setNamaBarang(namaBarangField.getText());
@@ -144,9 +138,7 @@ public class BarangPanel extends javax.swing.JPanel {
 
     void hapusData() {
         if (selectedBarangEntity != null) {
-
             int confirm = JOptionPane.showConfirmDialog(this, "Anda yakin ingin menghapus barang  " + selectedBarangEntity.getKodeBarang(), "Konfirmasi", JOptionPane.YES_NO_OPTION);
-
             if (confirm == 0) {
                 try {
                     barangImplement.delete(selectedBarangEntity.getKodeBarang());
@@ -156,13 +148,10 @@ public class BarangPanel extends javax.swing.JPanel {
                 } catch (Exception e) {
                     JOptionPane.showMessageDialog(this, "Gagal menghapus data dari database \n" + e.getMessage());
                 }
-
             }
-
         } else {
             JOptionPane.showMessageDialog(this, "Mohon pilih barang dalam tabel untuk melakukan penghapusan");
         }
-
     }
     
     /**
@@ -223,20 +212,20 @@ public class BarangPanel extends javax.swing.JPanel {
 
         tableBarang.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
             },
             new String [] {
-                "Kode Barang", "Nama Barang", "Jumlah", "Harga"
+                "Kode Barang", "Nama Barang", "Jumlah", "Harga", ""
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.String.class
+                java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.String.class, java.lang.Object.class
             };
             boolean[] canEdit = new boolean [] {
-                false, true, true, true
+                false, true, true, true, true
             };
 
             public Class getColumnClass(int columnIndex) {

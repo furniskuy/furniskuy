@@ -7,15 +7,15 @@ package penjualan.interfc;
 
 import java.sql.SQLException;
 import java.util.List;
-import penjualan.entity.PegawaiEntity;
+import penjualan.entity.PelangganEntity;
 
 /**
  *
  * @author fadil
  */
-public interface PegawaiInterface {
-    PegawaiEntity insert(PegawaiEntity pelanggan) throws SQLException;
-    void update(PegawaiEntity pelanggan) throws SQLException;
+public interface PelangganInterface {
+    PelangganEntity insert(PelangganEntity pelanggan) throws SQLException;
+    void update(PelangganEntity pelanggan) throws SQLException;
     void delete(String idPelanggan) throws SQLException;
-    List<PegawaiEntity> getAll() throws SQLException;
+    List<TableDataInterface> getAll() throws SQLException;
 }

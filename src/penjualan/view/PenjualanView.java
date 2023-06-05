@@ -14,6 +14,8 @@ import java.io.File;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import penjualan.panel.BarangPanel;
+import penjualan.panel.LaporanPanel;
+import penjualan.panel.PelangganPanel;
 import penjualan.panel.TransaksiPanel;
 
 /**
@@ -48,12 +50,12 @@ public class PenjualanView extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
+        pelanggan = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
+        laporan = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         menuView = new javax.swing.JPanel();
-        jLabel7 = new javax.swing.JLabel();
+        logoFurniskuy = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -72,7 +74,7 @@ public class PenjualanView extends javax.swing.JFrame {
         jPanel1.add(jLabel1, new java.awt.GridBagConstraints());
 
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/main.png"))); // NOI18N
-        jLabel2.setText("Master");
+        jLabel2.setText("Barang");
         jLabel2.setName("master"); // NOI18N
         jLabel2.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -80,6 +82,16 @@ public class PenjualanView extends javax.swing.JFrame {
             }
         });
         jPanel1.add(jLabel2, new java.awt.GridBagConstraints());
+
+        pelanggan.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/main.png"))); // NOI18N
+        pelanggan.setText("Pelanggan");
+        pelanggan.setName("master"); // NOI18N
+        pelanggan.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                pelangganClicked(evt);
+            }
+        });
+        jPanel1.add(pelanggan, new java.awt.GridBagConstraints());
 
         jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/money.png"))); // NOI18N
         jLabel3.setText("Transaksi");
@@ -90,13 +102,14 @@ public class PenjualanView extends javax.swing.JFrame {
         });
         jPanel1.add(jLabel3, new java.awt.GridBagConstraints());
 
-        jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/result.png"))); // NOI18N
-        jLabel4.setText("Laporan");
-        jPanel1.add(jLabel4, new java.awt.GridBagConstraints());
-
-        jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/info.png"))); // NOI18N
-        jLabel5.setText("Help");
-        jPanel1.add(jLabel5, new java.awt.GridBagConstraints());
+        laporan.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/result.png"))); // NOI18N
+        laporan.setText("Laporan");
+        laporan.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                laporanMouseClicked(evt);
+            }
+        });
+        jPanel1.add(laporan, new java.awt.GridBagConstraints());
 
         jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/logout.png"))); // NOI18N
         jLabel6.setText("Logout");
@@ -120,35 +133,36 @@ public class PenjualanView extends javax.swing.JFrame {
             e.printStackTrace();
         }
         ImageIcon imageIcon = new ImageIcon(fitimage(image, 380, 230));
-        jLabel7.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel7.setIcon(imageIcon);
-        menuView.add(jLabel7, new java.awt.GridBagConstraints());
+        logoFurniskuy.setForeground(new java.awt.Color(255, 255, 255));
+        logoFurniskuy.setIcon(imageIcon);
+        menuView.add(logoFurniskuy, new java.awt.GridBagConstraints());
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 858, Short.MAX_VALUE)
-            .addComponent(menuView, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 918, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(menuView, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(menuView, javax.swing.GroupLayout.DEFAULT_SIZE, 595, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
+                .addComponent(menuView, javax.swing.GroupLayout.PREFERRED_SIZE, 736, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void homeClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_homeClicked
-        // TODO add your handling code here:
-        replaceMenuView(jLabel7);
+        replaceMenuView(logoFurniskuy);
     }//GEN-LAST:event_homeClicked
 
     private void masterClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_masterClicked
-        // TODO add your handling code here:
         replaceMenuView(new BarangPanel());
     }//GEN-LAST:event_masterClicked
 
@@ -159,9 +173,16 @@ public class PenjualanView extends javax.swing.JFrame {
     }//GEN-LAST:event_logoutClicked
 
     private void transaksiClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_transaksiClicked
-        // TODO add your handling code here:
         replaceMenuView(new TransaksiPanel());
     }//GEN-LAST:event_transaksiClicked
+
+    private void pelangganClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pelangganClicked
+        replaceMenuView(new PelangganPanel());
+    }//GEN-LAST:event_pelangganClicked
+
+    private void laporanMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_laporanMouseClicked
+        replaceMenuView(new LaporanPanel());
+    }//GEN-LAST:event_laporanMouseClicked
     
     private Image fitimage(Image img , int w , int h) {
         BufferedImage resizedimage = new BufferedImage(w,h,BufferedImage.TYPE_INT_RGB);
@@ -176,11 +197,11 @@ public class PenjualanView extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JLabel laporan;
+    private javax.swing.JLabel logoFurniskuy;
     private javax.swing.JPanel menuView;
+    private javax.swing.JLabel pelanggan;
     // End of variables declaration//GEN-END:variables
 }

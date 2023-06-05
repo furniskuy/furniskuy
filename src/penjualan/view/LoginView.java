@@ -112,10 +112,13 @@ public class LoginView extends javax.swing.JFrame {
             if (foundUser.password.equals(password)) {
                 new PenjualanView().setVisible(true);
                 this.setVisible(false);
+            } else {
+                
+                JOptionPane.showMessageDialog(this, "Password salah!");
             }
         } catch (Exception e) {
             System.out.println(e);
-            JOptionPane.showMessageDialog(this, "Login gagal! \n" + e.getMessage());
+            JOptionPane.showMessageDialog(this, "Login gagal! \nUser tidak ditemukan" );
         }
     }//GEN-LAST:event_login
 

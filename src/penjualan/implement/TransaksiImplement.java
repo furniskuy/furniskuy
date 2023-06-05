@@ -5,11 +5,15 @@
  */
 package penjualan.implement;
 
-import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.List;
+import penjualan.entity.BarangEntity;
+import penjualan.entity.TransaksiEntity;
+import penjualan.interfc.TableDataInterface;
 import penjualan.koneksi.KoneksiSql;
 
 /**
@@ -17,27 +21,6 @@ import penjualan.koneksi.KoneksiSql;
  * @author fadil
  */
 public class TransaksiImplement {
-    public int urutanDb() {
-        Connection con = (Connection) KoneksiSql.getKoneksi();
-        int jumlah = 0;
-        
-        try {
-            String sql = "select count(*) as urutan from penjualan;";
-            Statement st = (Statement) con.createStatement();
-            ResultSet rs = st.executeQuery(sql);
-            
-            while(rs.next()) {
-                jumlah = rs.getInt("urutan");
-            }
-            
-            st.close();
-            rs.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return ++jumlah;
-    }
-    
     public ArrayList<String> viewKdBarang() throws SQLException {
         ArrayList<String> viewNamaBarang = new ArrayList();
         
@@ -70,5 +53,64 @@ public class TransaksiImplement {
             e.printStackTrace();
         }
         return viewIdPelanggan;
+    }
+    
+   public ArrayList<TableDataInterface> getAll() throws SQLException {
+        Statement st = KoneksiSql.getKoneksi().createStatement();
+        ResultSet rs = st.executeQuery("select * from transaksi join barang on barang.kode_barang = transaksi.id_barang join pelanggan on pelanggan.id_pelanggan =transaksi.id_pelanggan ;");
+        ArrayList<TableDataInterface> listTransaksi = new ArrayList<>();
+        
+        while(rs.next()) {
+            TransaksiEntity transaksi = new TransaksiEntity();
+            
+            transaksi.setKodeBarang(rs.getString("kode_barang"));
+            transaksi.setNamaBarang(rs.getString("nama_barang"));
+            transaksi.setJumlah(Integer.parseInt(rs.getString("jumlah")));
+            transaksi.setHargaBarang(Double.parseDouble(rs.getString("harga")));
+            transaksi.setSubTotal(Long.parseLong(rs.getString("sub_total")));
+            transaksi.setNamaPelanggan(rs.getString("nama"));
+            transaksi.setAlamat(rs.getString("alamat"));
+            transaksi.setNoTelp(rs.getString("notlp"));
+            
+            listTransaksi.add(transaksi);
+        }
+        return listTransaksi;
+    }
+   
+    public int insert(List<TransaksiEntity> listTransaksi) throws SQLException {
+        KoneksiSql.getKoneksi().setAutoCommit(false);
+        int inserted = 0;
+        
+        for (TransaksiEntity transaksi : listTransaksi) {
+            PreparedStatement st = KoneksiSql.getKoneksi().prepareStatement(
+                    "insert into transaksi(id_barang, id_pelanggan, jumlah, sub_total) values(?, ?, ?, ?);"
+            );
+            st.setString(1, transaksi.getIdBarang());
+            st.setInt(2, transaksi.getIdPelanggan());
+            st.setInt(3, transaksi.getJumlah());
+            st.setLong(4, transaksi.getSubTotal());
+            System.out.println(st.toString());
+            int rowAffected = st.executeUpdate();
+            
+            if (rowAffected == 1) {
+                inserted++;
+            }
+        }
+        
+        if (inserted == listTransaksi.size()) {
+            KoneksiSql.getKoneksi().commit();
+        } else {
+            KoneksiSql.getKoneksi().rollback();
+        }
+        
+        return inserted;
+    }
+    
+     public void delete(String id) throws SQLException {
+        PreparedStatement st = KoneksiSql.getKoneksi().prepareStatement(
+                "delete from transaksi where id = ?;"
+        );
+        st.setString(1, id);
+        st.executeUpdate();
     }
 }

@@ -5,26 +5,25 @@
  */
 package penjualan.implement;
 
-import java.util.List;
 import java.util.ArrayList;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import penjualan.entity.PegawaiEntity;
+import penjualan.entity.PelangganEntity;
+import penjualan.interfc.PelangganInterface;
 import penjualan.koneksi.KoneksiSql;
-import penjualan.interfc.PegawaiInterface;
+import penjualan.interfc.TableDataInterface;
 
 /**
  *
  * @author fadil
  */
-public class PegawaiImplement implements PegawaiInterface {
-    public PegawaiEntity insert(PegawaiEntity pelanggan) throws SQLException {
+public class PelangganImplement implements PelangganInterface  {
+    public PelangganEntity insert(PelangganEntity pelanggan) throws SQLException {
         PreparedStatement st = KoneksiSql.getKoneksi().prepareStatement(
-                "insert into pelanggan values(?, ?, ?, ?, ?);"
+                "insert into pelanggan values( ?, ?, ?, ?);"
         );
-        st.setString(1, pelanggan.getIdPegawai());
         st.setString(2, pelanggan.getNama());
         st.setString(3, pelanggan.getJenisKelamin());
         st.setString(4, pelanggan.getAlamat());
@@ -34,7 +33,7 @@ public class PegawaiImplement implements PegawaiInterface {
         return pelanggan;
     }
     
-    public void update(PegawaiEntity pelanggan) throws SQLException {
+    public void update(PelangganEntity pelanggan) throws SQLException {
         PreparedStatement st = KoneksiSql.getKoneksi().prepareStatement(
                 "update pelanggan set nama = ?, jk = ?, " +
                 "alamat = ?, notlp = ? where id_pelanggan = ?;"
@@ -43,25 +42,25 @@ public class PegawaiImplement implements PegawaiInterface {
         st.setString(2, pelanggan.getJenisKelamin());
         st.setString(3, pelanggan.getAlamat());
         st.setString(4, pelanggan.getNoTelp());
-        st.setString(5, pelanggan.getIdPegawai());
+        st.setString(5, pelanggan.getIdPelanggan());
         st.executeUpdate();
     }
     
-    public void delete(String idPegawai) throws SQLException {
+    public void delete(String idPelanggan) throws SQLException {
         PreparedStatement st = KoneksiSql.getKoneksi().prepareStatement(
                 "delete from pelanggan where id_pelanggan = ?;"
         );
-        st.setString(1, idPegawai);
+        st.setString(1, idPelanggan);
         st.executeUpdate();
     }
     
-    public List<PegawaiEntity> getAll() throws SQLException {
+    public ArrayList<TableDataInterface> getAll() throws SQLException {
         Statement st = KoneksiSql.getKoneksi().createStatement();
         ResultSet rs = st.executeQuery("select * from pelanggan;");
-        List<PegawaiEntity> listPegawai = new ArrayList<PegawaiEntity>();
+        ArrayList<TableDataInterface> listPelanggan = new ArrayList<TableDataInterface>();
         
         while(rs.next()) {
-            PegawaiEntity pelanggan = new PegawaiEntity();
+            PelangganEntity pelanggan = new PelangganEntity();
             
             pelanggan.setIdPegawai(rs.getString("id_pelanggan"));
             pelanggan.setNama(rs.getString("nama"));
@@ -69,9 +68,9 @@ public class PegawaiImplement implements PegawaiInterface {
             pelanggan.setAlamat(rs.getString("alamat"));
             pelanggan.setNoTelp(rs.getString("notlp"));
             
-            listPegawai.add(pelanggan);
+            listPelanggan.add(pelanggan);
         }
-        return listPegawai;
+        return listPelanggan;
     }
     
 }

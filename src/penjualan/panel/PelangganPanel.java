@@ -13,96 +13,151 @@ import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
-import penjualan.entity.PegawaiEntity;
-import penjualan.implement.PegawaiImplement;
-import penjualan.interfc.PegawaiInterface;
+import penjualan.entity.BarangEntity;
+import penjualan.entity.PelangganEntity;
+import penjualan.implement.BarangImplement;
+import penjualan.implement.PelangganImplement;
+import penjualan.interfc.PelangganInterface;
+import penjualan.interfc.TableDataInterface;
 
 /**
  *
  * @author fadildesk
  */
-public class PegawaiPanel extends javax.swing.JPanel {
- List<PegawaiEntity> record = new ArrayList<PegawaiEntity>();
-    PegawaiInterface plgServis;
-    int row;
+public class PelangganPanel extends javax.swing.JPanel {
+    List<TableDataInterface> listPelanggan = new ArrayList();
+
+    PelangganEntity emptyPelanggan = new PelangganEntity();
+    PelangganEntity selectedPelanggan = null;
+    PelangganImplement pelangganImplement = new PelangganImplement();
+    
     String jenisKelamin = "";
 
     /**
      * Creates new form PegawaiView
      */
-    public PegawaiPanel() {
+    public PelangganPanel() {
         initComponents();
+        getListPelanggan();
+        
+        buttonGroup1.add(lkRadio);
+        buttonGroup1.add(prRadio);
 
-        plgServis = new PegawaiImplement();
-        tablePegawai.getSelectionModel().addListSelectionListener(
-                new ListSelectionListener() {
-            @Override
-            public void valueChanged(ListSelectionEvent e) {
-                row = tablePegawai.getSelectedRow();
-                if (row != -1) {
-                    isiText();
-                    simpanButton.setEnabled(false);
-                    txt_idPegawai.setEnabled(false);
+        tablePelanggan.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            public void valueChanged(ListSelectionEvent event) {
+                if (!event.getValueIsAdjusting() && tablePelanggan.getSelectedRow() != -1) {
+                    if (tablePelanggan.getValueAt(tablePelanggan.getSelectedRow(), 0) != null) {
+                        int indexSelected = Integer.parseInt(tablePelanggan.getValueAt(tablePelanggan.getSelectedRow(), 0).toString()
+                        );
+                        setFieldValueAsSelectedRow(indexSelected - 1);
+                        simpanButton.setEnabled(false);
+
+                    }
                 }
             }
         });
-        this.statusAwal();
     }
-
-    void statusAwal() {
-        kosongkanText();
-        loadData();
-        isiTabel();
-    }
-
-    void kosongkanText() {
-        this.txt_idPegawai.setText("");
-        this.txt_namaPegawai.setText("");
-        this.txt_alamat.setText("");
-        this.txt_noTelepon.setText("");
-        rBtn_LK.setSelected(false);
-        rBtn_PR.setSelected(false);
-        jenisKelamin = "";
-    }
-
-    void loadData() {
+    
+    void getListPelanggan() {
+        DefaultTableModel dtm = new DefaultTableModel(null, emptyPelanggan.getHeader());
         try {
-            record = plgServis.getAll();
-        } catch (SQLException ex) {
-            Logger.getLogger(PegawaiPanel.class.getName()).log(Level.SEVERE,
-                    null, ex);
+            listPelanggan = pelangganImplement.getAll();
+            for (int i = 0; i < listPelanggan.size(); i++) {
+                dtm.addRow(listPelanggan.get(i).toTableRowWithIndex(i));
+            }
+            tablePelanggan.setModel(dtm);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Gagal mendapat data dari database \n" + e.getMessage());
         }
     }
 
-    void isiTabel() {
-        Object data[][] = new Object[record.size()][5];
-        int x = 0;
-
-        for (PegawaiEntity brg : record) {
-            data[x][0] = brg.getIdPegawai();
-            data[x][1] = brg.getNama();
-            data[x][2] = brg.getJenisKelamin();
-            data[x][3] = brg.getAlamat();
-            data[x][4] = brg.getNoTelp();
-            x++;
+    void clearField() {
+        this.idPegawaiField.setText("");
+        this.namaPegawaiField.setText("");
+        this.alamatField.setText("");
+        this.noTeleponField.setText("");
+        jenisKelamin = "";
+        lkRadio.setSelected(false);
+        prRadio.setSelected(false);
+    }
+   
+    boolean fieldIsEmpty() {
+        return idPegawaiField.getText().isEmpty() || namaPegawaiField.getText().isEmpty() || jenisKelamin.isEmpty() || alamatField.getText().isEmpty() || noTeleponField.getText().isEmpty();
+    }
+    
+    void setFieldValueAsSelectedRow(int row) {
+        selectedPelanggan =((PelangganEntity) listPelanggan.get(row));
+        this.idPegawaiField.setText(selectedPelanggan.getIdPelanggan());
+        this.namaPegawaiField.setText(selectedPelanggan.getNama());
+        this.alamatField.setText(selectedPelanggan.getAlamat());
+        this.noTeleponField.setText(selectedPelanggan.getNoTelp());
+        jenisKelamin = selectedPelanggan.getJenisKelamin();
+        if (selectedPelanggan.getJenisKelamin().equals("L")) {
+            lkRadio.setSelected(true);
         }
-        String judul[] = {"id_pelanggan", "nama_pelanggan", "jenis_kelamin",
-            "alamat", "no_telepon"};
-        tablePegawai.setModel(new DefaultTableModel(data, judul));
-//        jScrollPane2.setViewportView(tablePegawai);
+        if (selectedPelanggan.getJenisKelamin().equals("P")) {
+            prRadio.setSelected(true);
+        }
+    }
+    
+    void simpanData() {
+        if (!fieldIsEmpty()) {
+            PelangganEntity pelanggan = new PelangganEntity();
+            pelanggan.setNama(namaPegawaiField.getText());
+            pelanggan.setJenisKelamin(jenisKelamin);
+            pelanggan.setAlamat(alamatField.getText());
+            pelanggan.setNoTelp(noTeleponField.getText());
+
+            try {
+                pelangganImplement.insert(pelanggan);
+                JOptionPane.showMessageDialog(this, "Berhasil menyimpan data ke database");
+                getListPelanggan();
+            } catch (Exception e) {
+                System.out.println(e);
+                JOptionPane.showMessageDialog(this, "Gagal menyimpan data ke database \n" + e.getMessage());
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Data tidak boleh kosong");
+        }
+    }
+    void updateData() {
+        if (selectedPelanggan != null) {
+            if (!fieldIsEmpty()) {
+                selectedPelanggan.setNama(namaPegawaiField.getText());
+                selectedPelanggan.setJenisKelamin(jenisKelamin);
+                selectedPelanggan.setAlamat(alamatField.getText());
+                selectedPelanggan.setNoTelp(noTeleponField.getText());
+                selectedPelanggan.setJenisKelamin(jenisKelamin);
+
+                try {
+                    pelangganImplement.update(selectedPelanggan);
+                    JOptionPane.showMessageDialog(this, "Berhasil menngubah data dari database");
+                    getListPelanggan();
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(this, "Gagal mengubah data dari database \n" + e.getMessage());
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "Data tidak boleh kosong");
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Mohon pilih barang dalam tabel untuk melakukan penghapusan");
+        }
     }
 
-    void isiText() {
-        PegawaiEntity plg = record.get(row);
-        this.txt_idPegawai.setText(plg.getIdPegawai());
-        this.txt_namaPegawai.setText(plg.getNama());
-        this.txt_alamat.setText(plg.getAlamat());
-        this.txt_noTelepon.setText(plg.getNoTelp());
-        if (plg.getJenisKelamin().equals("L")) {
-            rBtn_LK.setSelected(true);
-        }
-        if (plg.getJenisKelamin().equals("P")) {
-            rBtn_PR.setSelected(true);
+    void hapusData() {
+        if (selectedPelanggan != null) {
+            int confirm = JOptionPane.showConfirmDialog(this, "Anda yakin ingin menghapus barang  " + selectedPelanggan.getIdPelanggan(), "Konfirmasi", JOptionPane.YES_NO_OPTION);
+            if (confirm == 0) {
+                try {
+                    pelangganImplement.delete(selectedPelanggan.getIdPelanggan());
+                    JOptionPane.showMessageDialog(this, "Berhasil menghapus data dari database");
+                    getListPelanggan();
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(this, "Gagal menghapus data dari database \n" + e.getMessage());
+                }
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Mohon pilih barang dalam tabel untuk melakukan penghapusan");
         }
     }
 
@@ -115,9 +170,10 @@ public class PegawaiPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        buttonGroup1 = new javax.swing.ButtonGroup();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tablePegawai = new javax.swing.JTable();
+        tablePelanggan = new javax.swing.JTable();
         jPanel2 = new javax.swing.JPanel();
         jPanel5 = new javax.swing.JPanel();
         simpanButton = new javax.swing.JButton();
@@ -125,21 +181,20 @@ public class PegawaiPanel extends javax.swing.JPanel {
         hapusButton = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
-        txt_noTelepon = new javax.swing.JTextField();
+        noTeleponField = new javax.swing.JTextField();
         jScrollPane3 = new javax.swing.JScrollPane();
-        txt_alamat = new javax.swing.JTextArea();
+        alamatField = new javax.swing.JTextArea();
         jLabel7 = new javax.swing.JLabel();
-        rBtn_LK = new javax.swing.JRadioButton();
-        rBtn_PR = new javax.swing.JRadioButton();
+        lkRadio = new javax.swing.JRadioButton();
+        prRadio = new javax.swing.JRadioButton();
         jLabel8 = new javax.swing.JLabel();
-        txt_namaPegawai = new javax.swing.JTextField();
+        namaPegawaiField = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
-        txt_idPegawai = new javax.swing.JTextField();
+        idPegawaiField = new javax.swing.JTextField();
         jLabel10 = new javax.swing.JLabel();
-        jLabel11 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
 
-        tablePegawai.setModel(new javax.swing.table.DefaultTableModel(
+        tablePelanggan.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -165,7 +220,7 @@ public class PegawaiPanel extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(tablePegawai);
+        jScrollPane1.setViewportView(tablePelanggan);
 
         jPanel2.setLayout(new java.awt.GridBagLayout());
 
@@ -189,6 +244,11 @@ public class PegawaiPanel extends javax.swing.JPanel {
         jPanel5.add(ubahButton, new java.awt.GridBagConstraints());
 
         hapusButton.setText("Hapus");
+        hapusButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                hapusButtonMouseClicked(evt);
+            }
+        });
         hapusButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 hapusButtonActionPerformed(evt);
@@ -200,24 +260,31 @@ public class PegawaiPanel extends javax.swing.JPanel {
 
         jLabel6.setText("No Tlp");
 
-        txt_alamat.setColumns(20);
-        txt_alamat.setRows(5);
-        jScrollPane3.setViewportView(txt_alamat);
+        alamatField.setColumns(20);
+        alamatField.setRows(5);
+        jScrollPane3.setViewportView(alamatField);
 
         jLabel7.setText("Alamat");
 
-        rBtn_LK.setText("Laki - Laki");
-        rBtn_LK.addActionListener(new java.awt.event.ActionListener() {
+        lkRadio.setText("Laki - Laki");
+        lkRadio.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                rBtn_LKActionPerformed(evt);
+                lkRadioActionPerformed(evt);
             }
         });
 
-        rBtn_PR.setText("Perempuan");
+        prRadio.setText("Perempuan");
+        prRadio.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                prRadioActionPerformed(evt);
+            }
+        });
 
         jLabel8.setText("Jenis Kelamin");
 
         jLabel9.setText("Nama");
+
+        idPegawaiField.setEditable(false);
 
         jLabel10.setText("ID Pelanggan");
 
@@ -237,13 +304,13 @@ public class PegawaiPanel extends javax.swing.JPanel {
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                         .addGroup(jPanel4Layout.createSequentialGroup()
-                            .addComponent(rBtn_LK)
+                            .addComponent(lkRadio)
                             .addGap(37, 37, 37)
-                            .addComponent(rBtn_PR))
+                            .addComponent(prRadio))
                         .addComponent(jScrollPane3)
-                        .addComponent(txt_namaPegawai)
-                        .addComponent(txt_idPegawai))
-                    .addComponent(txt_noTelepon, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(namaPegawaiField)
+                        .addComponent(idPegawaiField))
+                    .addComponent(noTeleponField, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(73, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
@@ -252,29 +319,26 @@ public class PegawaiPanel extends javax.swing.JPanel {
                 .addGap(7, 7, 7)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel10)
-                    .addComponent(txt_idPegawai, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(idPegawaiField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel9)
-                    .addComponent(txt_namaPegawai, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(namaPegawaiField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(32, 32, 32)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8)
-                    .addComponent(rBtn_LK)
-                    .addComponent(rBtn_PR))
+                    .addComponent(lkRadio)
+                    .addComponent(prRadio))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel7)
                     .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txt_noTelepon, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(noTeleponField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel6))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-
-        jLabel11.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        jLabel11.setText("Transaksi Penjualan");
 
         jLabel12.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel12.setText("Pegawai");
@@ -290,17 +354,12 @@ public class PegawaiPanel extends javax.swing.JPanel {
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGap(56, 56, 56)
                         .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(0, 7, Short.MAX_VALUE)))
                 .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(jLabel12)
                 .addGap(229, 229, 229))
-            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanel3Layout.createSequentialGroup()
-                    .addGap(195, 195, 195)
-                    .addComponent(jLabel11)
-                    .addContainerGap(195, Short.MAX_VALUE)))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -313,11 +372,6 @@ public class PegawaiPanel extends javax.swing.JPanel {
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(13, Short.MAX_VALUE))
-            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanel3Layout.createSequentialGroup()
-                    .addGap(257, 257, 257)
-                    .addComponent(jLabel11)
-                    .addContainerGap(257, Short.MAX_VALUE)))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -335,76 +389,36 @@ public class PegawaiPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void simpanButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_simpanButtonActionPerformed
-        try {
-            PegawaiEntity pelanggan = new PegawaiEntity();
-            pelanggan.setIdPegawai(txt_idPegawai.getText());
-            pelanggan.setNama(txt_namaPegawai.getText());
-            if (rBtn_LK.isSelected()) {
-                jenisKelamin = "L";
-            }
-            if (rBtn_PR.isSelected()) {
-                jenisKelamin = "P";
-            }
-            pelanggan.setJenisKelamin(jenisKelamin);
-            pelanggan.setAlamat(txt_alamat.getText());
-            pelanggan.setNoTelp(txt_noTelepon.getText());
-            plgServis.insert(pelanggan);
-            this.statusAwal();
-            JOptionPane.showMessageDialog(this, "Data berhasil disimpan");
-        } catch (Exception e) {
-            Logger.getLogger(PegawaiEntity.class.getName()).log(Level.SEVERE,
-                null, e);
-            JOptionPane.showMessageDialog(this, e.getMessage());
-        }
+        simpanData();
     }//GEN-LAST:event_simpanButtonActionPerformed
 
     private void ubahButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ubahButtonActionPerformed
-        try {
-            PegawaiEntity pelanggan = new PegawaiEntity();
-            pelanggan.setIdPegawai(txt_idPegawai.getText());
-            pelanggan.setNama(txt_namaPegawai.getText());
-            if (rBtn_LK.isSelected()) {
-                jenisKelamin = "L";
-            }
-            if (rBtn_PR.isSelected()) {
-                jenisKelamin = "P";
-            }
-            pelanggan.setJenisKelamin(jenisKelamin);
-            pelanggan.setAlamat(txt_alamat.getText());
-            pelanggan.setNoTelp(txt_noTelepon.getText());
-            plgServis.update(pelanggan);
-            this.statusAwal();
-            JOptionPane.showMessageDialog(this, "Data berhasil diubah");
-        } catch (Exception e) {
-            Logger.getLogger(PegawaiEntity.class.getName()).log(Level.SEVERE,
-                null, e);
-            JOptionPane.showMessageDialog(this, e.getMessage());
-        }
+       updateData();
     }//GEN-LAST:event_ubahButtonActionPerformed
 
     private void hapusButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hapusButtonActionPerformed
-        PegawaiEntity pelanggan = new PegawaiEntity();
-        String idPegawai = txt_idPegawai.getText();
-        try {
-            plgServis.delete(idPegawai);
-            this.statusAwal();
-            JOptionPane.showMessageDialog(this, "Data berhasil dihapus");
-        } catch (Exception e) {
-            Logger.getLogger(PegawaiEntity.class.getName()).log(Level.SEVERE,
-                null, e);
-            JOptionPane.showMessageDialog(this, e.getMessage());
-        }
+        hapusData();
     }//GEN-LAST:event_hapusButtonActionPerformed
 
-    private void rBtn_LKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rBtn_LKActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_rBtn_LKActionPerformed
+    private void lkRadioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lkRadioActionPerformed
+        jenisKelamin = "L";
+    }//GEN-LAST:event_lkRadioActionPerformed
+
+    private void hapusButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_hapusButtonMouseClicked
+         clearField();
+    }//GEN-LAST:event_hapusButtonMouseClicked
+
+    private void prRadioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_prRadioActionPerformed
+        jenisKelamin = "P";
+    }//GEN-LAST:event_prRadioActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextArea alamatField;
+    private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JButton hapusButton;
+    private javax.swing.JTextField idPegawaiField;
     private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
@@ -416,14 +430,12 @@ public class PegawaiPanel extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JRadioButton rBtn_LK;
-    private javax.swing.JRadioButton rBtn_PR;
+    private javax.swing.JRadioButton lkRadio;
+    private javax.swing.JTextField namaPegawaiField;
+    private javax.swing.JTextField noTeleponField;
+    private javax.swing.JRadioButton prRadio;
     private javax.swing.JButton simpanButton;
-    private javax.swing.JTable tablePegawai;
-    private javax.swing.JTextArea txt_alamat;
-    private javax.swing.JTextField txt_idPegawai;
-    private javax.swing.JTextField txt_namaPegawai;
-    private javax.swing.JTextField txt_noTelepon;
+    private javax.swing.JTable tablePelanggan;
     private javax.swing.JButton ubahButton;
     // End of variables declaration//GEN-END:variables
 }
