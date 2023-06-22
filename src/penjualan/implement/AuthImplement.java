@@ -10,10 +10,6 @@ import java.sql.SQLException;
 import penjualan.entity.UserEntity;
 import penjualan.koneksi.KoneksiSql;
 
-/**
- *
- * @author fadildesk
- */
 public class AuthImplement {
 
     public AuthImplement() {

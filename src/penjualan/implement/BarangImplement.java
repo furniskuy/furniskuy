@@ -16,10 +16,6 @@ import penjualan.interfc.BarangInterface;
 import penjualan.koneksi.KoneksiSql;
 import penjualan.interfc.TableDataInterface;
 
-/**
- *
- * @author fadil
- */
 public class BarangImplement implements BarangInterface {
     public BarangEntity insert(BarangEntity barang) throws SQLException {
         PreparedStatement st = KoneksiSql.getKoneksi().prepareStatement(

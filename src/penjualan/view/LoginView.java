@@ -8,10 +8,6 @@ import javax.swing.JOptionPane;
 import penjualan.entity.UserEntity;
 import penjualan.implement.AuthImplement;
 
-/**
- *
- * @author fadildesk
- */
 public class LoginView extends javax.swing.JFrame {
     
     private AuthImplement auth = new AuthImplement();

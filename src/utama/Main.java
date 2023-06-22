@@ -7,10 +7,6 @@ package utama;
 
 import penjualan.view.LoginView;
 
-/**
- *
- * @author fadil
- */
 public class Main {
 
     /**

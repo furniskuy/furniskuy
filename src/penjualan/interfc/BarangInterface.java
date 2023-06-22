@@ -8,10 +8,7 @@ package penjualan.interfc;
 import java.sql.SQLException;
 import java.util.List;
 import penjualan.entity.BarangEntity;
-/**
- *
- * @author fadil
- */
+
 public interface BarangInterface {
     BarangEntity insert(BarangEntity barang) throws SQLException;
     void update(BarangEntity barang) throws SQLException;

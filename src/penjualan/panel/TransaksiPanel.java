@@ -15,10 +15,7 @@ import javax.swing.table.DefaultTableModel;
 import penjualan.entity.TransaksiEntity;
 import penjualan.implement.TransaksiImplement;
 import penjualan.koneksi.KoneksiSql;
-/**
- *
- * @author fadildesk
- */
+
 public class TransaksiPanel extends javax.swing.JPanel {
     TransaksiImplement transaksiImplement = new TransaksiImplement();
     ArrayList<TransaksiEntity> lisTransaksi = new ArrayList<>();

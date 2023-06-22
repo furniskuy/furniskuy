@@ -18,10 +18,6 @@ import penjualan.panel.LaporanPanel;
 import penjualan.panel.PelangganPanel;
 import penjualan.panel.TransaksiPanel;
 
-/**
- *
- * @author fadil
- */
 public class PenjualanView extends javax.swing.JFrame {
 
     /**

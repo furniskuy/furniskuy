@@ -9,10 +9,6 @@ import java.sql.SQLException;
 import java.util.List;
 import penjualan.entity.PelangganEntity;
 
-/**
- *
- * @author fadil
- */
 public interface PelangganInterface {
     PelangganEntity insert(PelangganEntity pelanggan) throws SQLException;
     void update(PelangganEntity pelanggan) throws SQLException;

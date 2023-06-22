@@ -7,10 +7,6 @@ package penjualan.entity;
 
 import penjualan.interfc.TableDataInterface;
 
-/**
- *
- * @author fadil
- */
 public class PelangganEntity implements TableDataInterface {
     private int idPelanggan;
     private String nama, jenisKelamin, alamat, noTelp;

@@ -11,15 +11,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import penjualan.entity.BarangEntity;
 import penjualan.entity.TransaksiEntity;
 import penjualan.interfc.TableDataInterface;
 import penjualan.koneksi.KoneksiSql;
 
-/**
- *
- * @author fadil
- */
 public class TransaksiImplement {
     public ArrayList<String> viewKdBarang() throws SQLException {
         ArrayList<String> viewNamaBarang = new ArrayList();

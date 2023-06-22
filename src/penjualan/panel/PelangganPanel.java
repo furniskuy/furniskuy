@@ -4,26 +4,16 @@
  */
 package penjualan.panel;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
-import penjualan.entity.BarangEntity;
 import penjualan.entity.PelangganEntity;
-import penjualan.implement.BarangImplement;
 import penjualan.implement.PelangganImplement;
-import penjualan.interfc.PelangganInterface;
 import penjualan.interfc.TableDataInterface;
 
-/**
- *
- * @author fadildesk
- */
 public class PelangganPanel extends javax.swing.JPanel {
     List<TableDataInterface> listPelanggan = new ArrayList();
 

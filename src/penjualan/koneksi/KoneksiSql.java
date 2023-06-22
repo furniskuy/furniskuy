@@ -10,10 +10,6 @@ import java.sql.DriverManager;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- *
- * @author fadil
- */
 public class KoneksiSql {
 
     private static Connection con = null;
@@ -22,7 +18,7 @@ public class KoneksiSql {
             "&useLegacyDatetimeCode=false&serverTimezone=UTC";
     private static String jdbcString = "jdbc:mysql://localhost:3306/pbo_barang";
     private static String databaseUser = "root";
-    private static String databasePassword = "";
+    private static String databasePassword = "secret";
 
     public static Connection getKoneksi() {
         if (con == null) {

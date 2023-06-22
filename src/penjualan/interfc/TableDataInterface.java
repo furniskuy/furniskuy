@@ -5,10 +5,6 @@
  */
 package penjualan.interfc;
 
-/**
- *
- * @author fadil
- */
 public interface TableDataInterface {
     String[] getNamaKolom();
     String[] getHeader();

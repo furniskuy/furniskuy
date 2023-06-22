@@ -9,18 +9,8 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import penjualan.entity.BarangEntity;
 import penjualan.implement.BarangImplement;
-import penjualan.koneksi.KoneksiSql;
 import penjualan.interfc.TableDataInterface;
 
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
- */
-
-/**
- *
- * @author fadildesk
- */
 public class BarangPanel extends javax.swing.JPanel {
 
     List<TableDataInterface> listBarang = new ArrayList();

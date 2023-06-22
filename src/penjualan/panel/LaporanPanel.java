@@ -6,22 +6,11 @@ import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
-import penjualan.entity.BarangEntity;
 import penjualan.entity.TransaksiEntity;
-import penjualan.implement.BarangImplement;
 import penjualan.implement.TransaksiImplement;
 import penjualan.interfc.TableDataInterface;
 import penjualan.view.StatistikView;
 
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
- */
-
-/**
- *
- * @author fadildesk
- */
 public class LaporanPanel extends javax.swing.JPanel {
     List<TableDataInterface> listTransaksi = new ArrayList();
 

@@ -6,10 +6,6 @@ package penjualan.entity;
 
 import penjualan.interfc.TableDataInterface;
 
-/**
- *
- * @author fadildesk
- */
 public class TransaksiEntity implements TableDataInterface {
     private int idTransaksi, idPelanggan;
     private String idBarang;

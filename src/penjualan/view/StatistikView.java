@@ -11,10 +11,6 @@ import javax.swing.JOptionPane;
 import penjualan.entity.PieChartModel;
 import penjualan.koneksi.KoneksiSql;
 
-/**
- *
- * @author fadildesk
- */
 public class StatistikView extends javax.swing.JFrame {
 
     /**
@@ -31,7 +27,7 @@ public class StatistikView extends javax.swing.JFrame {
     void getPenjualanBarangData() {
         try {
             Statement st = KoneksiSql.getKoneksi().createStatement();
-            ResultSet rs = st.executeQuery("SELECT concat(kode_barang, nama_barang) as nama_barang, sum(barang.jumlah) as jumlah FROM transaksi join barang on barang.kode_barang = transaksi.id_barang group by kode_barang;");
+            ResultSet rs = st.executeQuery("SELECT concat(kode_barang, '-', nama_barang) as nama_barang, sum(transaksi.jumlah) as jumlah FROM transaksi join barang on barang.kode_barang = transaksi.id_barang group by kode_barang;");
             while (rs.next()) {
                 pieChartBarang.addData(new PieChartModel(rs.getString("nama_barang"), rs.getInt("jumlah"), new Color((int) (Math.random() * 0x1000000))));
             }

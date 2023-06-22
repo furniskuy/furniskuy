@@ -7,10 +7,7 @@ package penjualan.entity;
 
 import penjualan.interfc.TableDataInterface;
 
-/**
- *
- * @author fadil
- */
+
 public class BarangEntity implements TableDataInterface {
     private String kodeBarang, namaBarang;
     private int stokBarang;
